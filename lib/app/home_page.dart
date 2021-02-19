@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poghouse/common_widgets/show_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
 
 class HomePage extends StatelessWidget {
@@ -10,6 +11,20 @@ class HomePage extends StatelessWidget {
       await auth.signOut();
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<void> _confirmSignOut(BuildContext context) async {
+    final didRequestSignOut = await showAlertDialog(
+      context,
+      title: 'Logout',
+      content: 'Are you sure that you want to logout?',
+      cancelActionText: 'Cancel',
+      defaultActionText: 'Logout',
+    );
+
+    if (didRequestSignOut == true) {
+      _signOut();
     }
   }
 
@@ -27,7 +42,7 @@ class HomePage extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            onPressed: _signOut,
+            onPressed: () => _confirmSignOut(context),
           ),
         ],
       ),
