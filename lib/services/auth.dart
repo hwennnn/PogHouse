@@ -9,7 +9,6 @@ abstract class AuthBase {
 }
 
 class Auth implements AuthBase {
-
   final _firebaseAuth = FirebaseAuth.instance;
 
   @override
@@ -20,26 +19,35 @@ class Auth implements AuthBase {
 
   @override
   Future<User> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-    // Create a new credential
-    final GoogleAuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    // Once signed in, return the UserCredential
-    final userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-
-    return userCredential.user;
+    final googleSignIn = GoogleSignIn();
+    final googleUser = await googleSignIn.signIn();
+    if (googleUser != null) {
+      final googleAuth = await googleUser.authentication;
+      if (googleAuth.idToken != null) {
+        final userCredential = await _firebaseAuth
+            .signInWithCredential(GoogleAuthProvider.credential(
+          idToken: googleAuth.idToken,
+          accessToken: googleAuth.accessToken,
+        ));
+        return userCredential.user;
+      } else {
+        throw FirebaseAuthException(
+          code: 'ERROR_MISSING_GOOGLE_ID_TOKEN',
+          message: 'Missing Google ID Token',
+        );
+      }
+    } else {
+      throw FirebaseAuthException(
+        code: 'ERROR_ABORTED_BY_USER',
+        message: 'Sign in aborted by user',
+      );
+    }
   }
 
   @override
   Future<void> signOut() async {
+    final googleSignIn = GoogleSignIn();
+    await googleSignIn.signOut();
     await _firebaseAuth.signOut();
   }
 }
