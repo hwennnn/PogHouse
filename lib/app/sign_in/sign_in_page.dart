@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/sign_in/social_sign_in_button.dart';
+import 'package:poghouse/services/auth.dart';
 
 
 class SignInPage extends StatelessWidget {
+  const SignInPage({Key key, @required this.auth}) : super(key: key);
+  final AuthBase auth;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
