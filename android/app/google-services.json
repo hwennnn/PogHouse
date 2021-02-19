@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "752873680480",
+    "project_id": "poghouse-65339",
+    "storage_bucket": "poghouse-65339.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:752873680480:android:0afb5e617963fe8c225d05",
+        "android_client_info": {
+          "package_name": "com.hwendev.poghouse"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "752873680480-gdimjc8boar7cdeasbin52s8tcaidlte.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hwendev.poghouse",
+            "certificate_hash": "3476a4e2b88b0d0f2b2f899fbad1202ef3a08a2c"
+          }
+        },
+        {
+          "client_id": "752873680480-rpc3h596pak06c86qevcl5v8e2m7tg6m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBs-L-lGNaMhtJK4arPJTvmzzvH_2OuCoY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "752873680480-rpc3h596pak06c86qevcl5v8e2m7tg6m.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "752873680480-b38eotmv64iej4la875792jbng0elglh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hwendev.pog-house"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
