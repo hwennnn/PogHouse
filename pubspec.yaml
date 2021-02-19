@@ -33,6 +33,14 @@ dependencies:
   google_sign_in: "^4.5.1"
   flutter_login_facebook: 0.4.0+1
 
+# Fix "pick account" for google auth on iOS
+dependency_overrides:
+  google_sign_in:
+    git:
+      url: https://github.com/orestesgaolin/plugins.git
+      path: packages/google_sign_in/google_sign_in
+      ref: fix/ios-sign-in-with-google
+
 
 dev_dependencies:
   flutter_test:
