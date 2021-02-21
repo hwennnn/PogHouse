@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:poghouse/common_widgets/show_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/firestoreController.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, @required this.auth}) : super(key: key);
-  final AuthBase auth;
-
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -15,8 +13,10 @@ class _HomePageState extends State<HomePage> {
   final firestoreController = new FirestoreController();
 
   Future<void> _signOut() async {
+    final auth = Provider.of<AuthBase>(context, listen: false);
+
     try {
-      await widget.auth.signOut();
+      await auth.signOut();
     } catch (e) {
       print(e);
     }
@@ -37,11 +37,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _pressed() async {
-    await FirestoreController().insertNewUser(widget.auth.currentUser);
+    final auth = Provider.of<AuthBase>(context, listen: false);
+    await FirestoreController().insertNewUser(auth.currentUser);
   }
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<AuthBase>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Home Page'),
@@ -59,7 +62,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: Center(
-        child: Image.network(widget.auth.profilePic),
+        child: Image.network(auth.profilePic),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),

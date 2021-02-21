@@ -33,6 +33,7 @@ dependencies:
   google_sign_in: "^4.5.1"
   flutter_login_facebook: 0.4.0+1
   cloud_firestore: 0.14.3
+  provider: ^4.3.3
 
 # Fix "pick account" for google auth on iOS
 dependency_overrides:

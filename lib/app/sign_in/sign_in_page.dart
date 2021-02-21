@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:poghouse/app/sign_in/social_sign_in_button.dart';
 import 'package:poghouse/common_widgets/loading.dart';
 import 'package:poghouse/services/auth.dart';
+import 'package:provider/provider.dart';
 
 class SignInPage extends StatefulWidget {
-  const SignInPage({Key key, @required this.auth}) : super(key: key);
-  final AuthBase auth;
-
   @override
   _SignInPageState createState() => _SignInPageState();
 }
@@ -15,12 +13,14 @@ class _SignInPageState extends State<SignInPage> {
   bool isLoading = false;
 
   Future<void> _signInWithGoogle() async {
+    final auth = Provider.of<AuthBase>(context, listen: false);
+
     this.setState(() {
       isLoading = true;
     });
 
     try {
-      await widget.auth.signInWithGoogle();
+      await auth.signInWithGoogle();
     } catch (e) {
       print(e.toString());
     }
@@ -31,12 +31,14 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   Future<void> _signInWithFacebook() async {
+    final auth = Provider.of<AuthBase>(context, listen: false);
+
     this.setState(() {
       isLoading = true;
     });
 
     try {
-      await widget.auth.signInWithFacebook();
+      await auth.signInWithFacebook();
     } catch (e) {
       print(e.toString());
     }
