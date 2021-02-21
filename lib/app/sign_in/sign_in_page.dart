@@ -10,13 +10,13 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  bool isLoading = false;
+  bool _isLoading = false;
 
   Future<void> _signInWithGoogle() async {
     final auth = Provider.of<AuthBase>(context, listen: false);
 
     this.setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
 
     try {
@@ -26,7 +26,7 @@ class _SignInPageState extends State<SignInPage> {
     }
 
     this.setState(() {
-      isLoading = false;
+      _isLoading = false;
     });
   }
 
@@ -34,7 +34,7 @@ class _SignInPageState extends State<SignInPage> {
     final auth = Provider.of<AuthBase>(context, listen: false);
 
     this.setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
 
     try {
@@ -44,7 +44,7 @@ class _SignInPageState extends State<SignInPage> {
     }
 
     this.setState(() {
-      isLoading = false;
+      _isLoading = false;
     });
   }
 
@@ -99,7 +99,7 @@ class _SignInPageState extends State<SignInPage> {
 
         // Loading
         Positioned(
-          child: isLoading ? const Loading() : Container(),
+          child: _isLoading ? const Loading() : Container(),
         ),
       ],
     );
