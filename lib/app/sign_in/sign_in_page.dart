@@ -1,26 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/sign_in/social_sign_in_button.dart';
+import 'package:poghouse/common_widgets/loading.dart';
 import 'package:poghouse/services/auth.dart';
 
-
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
   const SignInPage({Key key, @required this.auth}) : super(key: key);
   final AuthBase auth;
 
-  Future<void> _signInWithGoogle() async{
+  @override
+  _SignInPageState createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  bool isLoading = false;
+
+  Future<void> _signInWithGoogle() async {
+    this.setState(() {
+      isLoading = true;
+    });
+
     try {
-      await auth.signInWithGoogle();
+      await widget.auth.signInWithGoogle();
     } catch (e) {
       print(e.toString());
     }
+
+    this.setState(() {
+      isLoading = false;
+    });
   }
 
-  Future<void> _signInWithFacebook() async{
+  Future<void> _signInWithFacebook() async {
+    this.setState(() {
+      isLoading = true;
+    });
+
     try {
-      await auth.signInWithFacebook();
+      await widget.auth.signInWithFacebook();
     } catch (e) {
       print(e.toString());
     }
+
+    this.setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -36,38 +59,47 @@ class SignInPage extends StatelessWidget {
   }
 
   Widget _buildContent() {
-    return Padding(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Text(
-            'Sign in to PogHouse',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 32.0,
-              fontWeight: FontWeight.w600,
-            ),
+    return Stack(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Text(
+                'Sign in to PogHouse',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 32.0,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 48.0),
+              SocialSignInButton(
+                assetName: 'images/google-logo.png',
+                text: 'Sign in with Google',
+                textColor: Colors.black87,
+                color: Colors.white,
+                onPressed: _signInWithGoogle,
+              ),
+              SizedBox(height: 8.0),
+              SocialSignInButton(
+                assetName: 'images/facebook-logo.png',
+                text: 'Sign in with Facebook',
+                textColor: Colors.white,
+                color: Color(0xFF334D92),
+                onPressed: _signInWithFacebook,
+              ),
+            ],
           ),
-          SizedBox(height: 48.0),
-          SocialSignInButton(
-            assetName: 'images/google-logo.png',
-            text: 'Sign in with Google',
-            textColor: Colors.black87,
-            color: Colors.white,
-            onPressed: _signInWithGoogle,
-          ),
-          SizedBox(height: 8.0),
-          SocialSignInButton(
-            assetName: 'images/facebook-logo.png',
-            text: 'Sign in with Facebook',
-            textColor: Colors.white,
-            color: Color(0xFF334D92),
-            onPressed: _signInWithFacebook,
-          ),
-        ],
-      ),
+        ),
+
+        // Loading
+        Positioned(
+          child: isLoading ? const Loading() : Container(),
+        ),
+      ],
     );
   }
 }

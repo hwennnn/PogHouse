@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 abstract class AuthBase {
   User get currentUser;
+  String get profilePic;
   Stream<User> authStateChanges();
   Future<User> signInWithGoogle();
   Future<User> signInWithFacebook();
@@ -85,4 +86,7 @@ class Auth implements AuthBase {
     
     await _firebaseAuth.signOut();
   }
+
+  @override
+  String get profilePic => currentUser.photoURL;
 }
