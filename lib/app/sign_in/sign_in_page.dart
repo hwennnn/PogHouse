@@ -1,51 +1,63 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:poghouse/app/sign_in/sign_in_manager.dart';
 import 'package:poghouse/app/sign_in/social_sign_in_button.dart';
 import 'package:poghouse/common_widgets/loading.dart';
+import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:provider/provider.dart';
 
-class SignInPage extends StatefulWidget {
-  @override
-  _SignInPageState createState() => _SignInPageState();
-}
+class SignInPage extends StatelessWidget {
+  const SignInPage({
+    Key key,
+    @required this.manager,
+    @required this.isLoading,
+  }) : super(key: key);
+  final SignInManager manager;
+  final bool isLoading;
 
-class _SignInPageState extends State<SignInPage> {
-  bool _isLoading = false;
-
-  Future<void> _signInWithGoogle() async {
+  static Widget create(BuildContext context) {
     final auth = Provider.of<AuthBase>(context, listen: false);
-
-    this.setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      await auth.signInWithGoogle();
-    } catch (e) {
-      print(e.toString());
-    }
-
-    this.setState(() {
-      _isLoading = false;
-    });
+    return ChangeNotifierProvider<ValueNotifier<bool>>(
+      create: (_) => ValueNotifier<bool>(false),
+      child: Consumer<ValueNotifier<bool>>(
+        builder: (_, isLoading, __) => Provider<SignInManager>(
+          create: (_) => SignInManager(auth: auth, isLoading: isLoading),
+          child: Consumer<SignInManager>(
+            builder: (_, manager, __) =>
+                SignInPage(manager: manager, isLoading: isLoading.value),
+          ),
+        ),
+      ),
+    );
   }
 
-  Future<void> _signInWithFacebook() async {
-    final auth = Provider.of<AuthBase>(context, listen: false);
-
-    this.setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      await auth.signInWithFacebook();
-    } catch (e) {
-      print(e.toString());
+  void _showSignInError(BuildContext context, Exception exception) {
+    if (exception is FirebaseException &&
+        exception.code == 'ERROR_ABORTED_BY_USER') {
+      return;
     }
+    showExceptionAlertDialog(
+      context,
+      title: 'Sign in failed',
+      exception: exception,
+    );
+  }
 
-    this.setState(() {
-      _isLoading = false;
-    });
+  Future<void> _signInWithGoogle(BuildContext context) async {
+    try {
+      await manager.signInWithGoogle();
+    } on Exception catch (e) {
+      _showSignInError(context, e);
+    }
+  }
+
+  Future<void> _signInWithFacebook(BuildContext context) async {
+    try {
+      await manager.signInWithFacebook();
+    } on Exception catch (e) {
+      _showSignInError(context, e);
+    }
   }
 
   @override
@@ -55,12 +67,12 @@ class _SignInPageState extends State<SignInPage> {
         title: Text('PogHouse'),
         elevation: 2.0,
       ),
-      body: _buildContent(),
+      body: _buildContent(context),
       backgroundColor: Colors.grey[200],
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(BuildContext context) {
     return Stack(
       children: <Widget>[
         Padding(
@@ -83,7 +95,7 @@ class _SignInPageState extends State<SignInPage> {
                 text: 'Sign in with Google',
                 textColor: Colors.black87,
                 color: Colors.white,
-                onPressed: _signInWithGoogle,
+                onPressed: () => _signInWithGoogle(context),
               ),
               SizedBox(height: 8.0),
               SocialSignInButton(
@@ -91,7 +103,7 @@ class _SignInPageState extends State<SignInPage> {
                 text: 'Sign in with Facebook',
                 textColor: Colors.white,
                 color: Color(0xFF334D92),
-                onPressed: _signInWithFacebook,
+                onPressed: () => _signInWithFacebook(context),
               ),
             ],
           ),
@@ -99,7 +111,7 @@ class _SignInPageState extends State<SignInPage> {
 
         // Loading
         Positioned(
-          child: _isLoading ? const Loading() : Container(),
+          child: isLoading ? const Loading() : Container(),
         ),
       ],
     );
