@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:poghouse/app/home/job_list_tile.dart';
+import 'package:poghouse/app/home/room_action_page.dart';
+import 'package:poghouse/app/home/room_list_tile.dart';
 import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/show_alert_dialog.dart';
 import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
@@ -33,20 +34,6 @@ class HomePage extends StatelessWidget {
 
     if (didRequestSignOut == true) {
       _signOut();
-    }
-  }
-
-  Future<void> _pressed(BuildContext context) async {
-    try {
-      final database = Provider.of<Database>(context, listen: false);
-      final room = Room(id: documentId, name: "yo");
-      await database.createRoom(room);
-    } on FirebaseException catch (e) {
-      showExceptionAlertDialog(
-        context,
-        title: 'Operation failed',
-        exception: e,
-      );
     }
   }
 
@@ -84,7 +71,10 @@ class HomePage extends StatelessWidget {
       body: _buildContents(context),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () => _pressed(context),
+        onPressed: () => RoomActionPage.show(
+          context,
+          database: Provider.of<Database>(context, listen: false),
+        ),
       ),
     );
   }
@@ -103,6 +93,11 @@ class HomePage extends StatelessWidget {
             onDismissed: (direction) => _delete(context, room),
             child: RoomListTile(
               room: room,
+              onTap: () => RoomActionPage.show(
+                context,
+                database: Provider.of<Database>(context, listen: false),
+                room: room,
+              ),
             ),
           ),
         );

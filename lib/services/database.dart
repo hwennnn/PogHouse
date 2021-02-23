@@ -6,7 +6,7 @@ import 'firestore_service.dart';
 
 abstract class Database {
   Future<void> createUser(User user);
-  Future<void> createRoom(Room room);
+  Future<void> setRoom(Room room);
   Future<void> deleteRoom(Room room);
   Stream<List<Room>> roomsStream();
 }
@@ -29,7 +29,7 @@ class FirestoreDatabase implements Database {
     );
   }
 
-  Future<void> createRoom(Room room) => _service.setData(
+  Future<void> setRoom(Room room) => _service.setData(
         path: APIPath.room(room.id),
         data: room.toMap(),
       );
