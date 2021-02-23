@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
@@ -28,12 +30,14 @@ class _RoomActionPageState extends State<RoomActionPage> {
   final _formKey = GlobalKey<FormState>();
 
   String _name;
+  bool _isPublic = false;
 
   @override
   void initState() {
     super.initState();
     if (widget.room != null) {
       _name = widget.room.name;
+      _isPublic = widget.room.isPublic;
     }
   }
 
@@ -50,7 +54,7 @@ class _RoomActionPageState extends State<RoomActionPage> {
     if (_validateAndSaveForm()) {
       try {
         final id = widget.room?.id ?? documentId;
-        final room = Room(id: id, name: _name);
+        final room = Room(id: id, name: _name, isPublic: _isPublic);
         await widget.database.setRoom(room);
         Navigator.of(context).pop();
       } on FirebaseException catch (e) {
@@ -116,6 +120,25 @@ class _RoomActionPageState extends State<RoomActionPage> {
         validator: (value) => value.isNotEmpty ? null : 'Name can\'t be empty',
         onSaved: (value) => _name = value,
       ),
+      SizedBox(height: 20),
+      // switch
+      (!Platform.isIOS)
+          ? Switch(
+              value: _isPublic,
+              onChanged: (newValue) {
+                setState(() {
+                  _isPublic = newValue;
+                });
+              },
+            )
+          : CupertinoSwitch(
+              value: _isPublic,
+              onChanged: (newValue) {
+                setState(() {
+                  _isPublic = newValue;
+                });
+              },
+            ),
     ];
   }
 }

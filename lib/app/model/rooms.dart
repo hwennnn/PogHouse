@@ -1,9 +1,10 @@
 import 'package:meta/meta.dart';
 
 class Room {
-  Room({@required this.id, this.name});
+  Room({@required this.id, this.name, this.isPublic});
   final String id;
   final String name;
+  final bool isPublic;
 
   factory Room.fromMap(Map<String, dynamic> data) {
     if (data == null) {
@@ -12,10 +13,12 @@ class Room {
 
     final String id = data['id'];
     final String name = data['name'];
+    final bool isPublic = data['isPublic'];
 
     return Room(
       id: id,
       name: name,
+      isPublic: isPublic,
     );
   }
 
@@ -23,6 +26,7 @@ class Room {
     return {
       'id': id,
       'name': name,
+      'isPublic': isPublic,
     };
   }
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/empty_content.dart';
+import 'package:poghouse/app/model/rooms.dart';
+import 'package:poghouse/services/auth.dart';
+import 'package:provider/provider.dart';
 
 typedef ItemWidgetBuilder<T> = Widget Function(BuildContext context, T item);
 
@@ -15,7 +18,9 @@ class ListItemsBuilder<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (snapshot.hasData) {
-      final List<T> items = snapshot.data;
+      final List<T> items = (T == Room)
+          ? filterRoom(context, snapshot.data as List<Room>)
+          : snapshot.data;
       if (items.isNotEmpty) {
         return _buildList(items);
       } else {
@@ -41,5 +46,17 @@ class ListItemsBuilder<T> extends StatelessWidget {
         return itemBuilder(context, items[index - 1]);
       },
     );
+  }
+
+  List<Room> filterRoom(BuildContext context, List<Room> rooms) {
+    List<Room> result = [];
+    final auth = Provider.of<AuthBase>(context, listen: false);
+    for (Room room in rooms) {
+      if (room.isPublic) {
+        result.add(room);
+      }
+    }
+
+    return result;
   }
 }

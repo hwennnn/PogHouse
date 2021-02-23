@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:poghouse/app/home/list_items_builder.dart';
 import 'package:poghouse/app/home/room_action_page.dart';
 import 'package:poghouse/app/home/room_list_tile.dart';
 import 'package:poghouse/app/model/rooms.dart';
@@ -8,8 +9,6 @@ import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
 import 'package:provider/provider.dart';
-
-import 'list_items_builder.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key key, @required this.auth}) : super(key: key);
