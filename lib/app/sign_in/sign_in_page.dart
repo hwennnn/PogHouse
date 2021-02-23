@@ -5,7 +5,7 @@ import 'package:poghouse/app/sign_in/social_sign_in_button.dart';
 import 'package:poghouse/common_widgets/loading.dart';
 import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
-import 'package:poghouse/services/firestoreController.dart';
+import 'package:poghouse/services/database.dart';
 import 'package:provider/provider.dart';
 
 class SignInPage extends StatelessWidget {
@@ -48,9 +48,8 @@ class SignInPage extends StatelessWidget {
   Future<void> _signInWithGoogle(BuildContext context) async {
     try {
       final user = await manager.signInWithGoogle();
-      final firestoreController =
-          Provider.of<FirestoreController>(context, listen: false);
-      await firestoreController.insertNewUser(user);
+      final database = Provider.of<Database>(context, listen: false);
+      await database.createUser(user);
     } on Exception catch (e) {
       _showSignInError(context, e);
     }
@@ -59,9 +58,8 @@ class SignInPage extends StatelessWidget {
   Future<void> _signInWithFacebook(BuildContext context) async {
     try {
       final user = await manager.signInWithFacebook();
-      final firestoreController =
-          Provider.of<FirestoreController>(context, listen: false);
-      await firestoreController.insertNewUser(user);
+      final database = Provider.of<Database>(context, listen: false);
+      await database.createUser(user);
     } on Exception catch (e) {
       _showSignInError(context, e);
     }

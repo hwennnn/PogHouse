@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:poghouse/app/home/job_list_tile.dart';
+import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/show_alert_dialog.dart';
 import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
-import 'package:poghouse/services/firestoreController.dart';
+import 'package:poghouse/services/database.dart';
 import 'package:provider/provider.dart';
+
+import 'list_items_builder.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key key, @required this.auth}) : super(key: key);
@@ -34,9 +38,22 @@ class HomePage extends StatelessWidget {
 
   Future<void> _pressed(BuildContext context) async {
     try {
-      final firestoreController =
-          Provider.of<FirestoreController>(context, listen: false);
-      await firestoreController.insertNewUser(auth.currentUser);
+      final database = Provider.of<Database>(context, listen: false);
+      final room = Room(id: documentId, name: "yo");
+      await database.createRoom(room);
+    } on FirebaseException catch (e) {
+      showExceptionAlertDialog(
+        context,
+        title: 'Operation failed',
+        exception: e,
+      );
+    }
+  }
+
+  Future<void> _delete(BuildContext context, Room room) async {
+    try {
+      final database = Provider.of<Database>(context, listen: false);
+      await database.deleteRoom(room);
     } on FirebaseException catch (e) {
       showExceptionAlertDialog(
         context,
@@ -64,13 +81,32 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Image.network(auth.profilePic),
-      ),
+      body: _buildContents(context),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         onPressed: () => _pressed(context),
       ),
+    );
+  }
+
+  Widget _buildContents(BuildContext context) {
+    final database = Provider.of<Database>(context, listen: false);
+    return StreamBuilder<List<Room>>(
+      stream: database.roomsStream(),
+      builder: (context, snapshot) {
+        return ListItemsBuilder<Room>(
+          snapshot: snapshot,
+          itemBuilder: (context, room) => Dismissible(
+            key: Key('room-${room.id}'),
+            background: Container(color: Colors.red),
+            direction: DismissDirection.endToStart,
+            onDismissed: (direction) => _delete(context, room),
+            child: RoomListTile(
+              room: room,
+            ),
+          ),
+        );
+      },
     );
   }
 }
