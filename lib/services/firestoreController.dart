@@ -6,11 +6,8 @@ class FirestoreController {
 
   Future<void> insertNewUser(User user) async {
     CollectionReference users = _firestore.collection('users');
-
     DocumentSnapshot result = await users.doc(user.uid).get();
-    print(result.exists);
     if (!result.exists) {
-      print("insert new user");
       await users.doc(user.uid).set({
         'nickname': user.displayName,
         'photoUrl': user.photoURL,
