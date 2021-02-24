@@ -1,14 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/app/model/rooms.dart';
 import 'package:uuid/uuid.dart';
 import 'api_path.dart';
 import 'firestore_service.dart';
 
 abstract class Database {
-  Future<void> createUser(User user);
+  Future<void> createPeople(User user);
   Future<void> setRoom(Room room);
   Future<void> deleteRoom(Room room);
   Stream<List<Room>> roomsStream();
+  Stream<List<People>> peopleStream();
 }
 
 String get documentId => Uuid().v4();
@@ -18,9 +20,9 @@ class FirestoreDatabase implements Database {
 
   final _service = FirestoreService.instance;
 
-  Future<void> createUser(User user) async {
+  Future<void> createPeople(User user) async {
     _service.setData(
-      path: APIPath.user(user.uid),
+      path: APIPath.aPeople(user.uid),
       data: {
         'id': user.uid,
         'nickname': user.displayName,
@@ -41,5 +43,10 @@ class FirestoreDatabase implements Database {
   Stream<List<Room>> roomsStream() => _service.collectionStream(
         path: APIPath.rooms(),
         builder: (data) => Room.fromMap(data),
+      );
+
+  Stream<List<People>> peopleStream() => _service.collectionStream(
+        path: APIPath.people(),
+        builder: (data) => People.fromMap(data),
       );
 }

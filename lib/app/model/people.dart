@@ -1,10 +1,10 @@
-class User {
-  User({this.id, this.nickname, this.photoUrl});
+class People {
+  People({this.id, this.nickname, this.photoUrl});
   final String id;
   final String nickname;
   final String photoUrl;
 
-  factory User.fromMap(Map<String, dynamic> data) {
+  factory People.fromMap(Map<String, dynamic> data) {
     if (data == null) {
       return null;
     }
@@ -13,7 +13,7 @@ class User {
     final String nickname = data['nickname'];
     final String photoUrl = data['photoUrl'];
 
-    return User(
+    return People(
       id: id,
       nickname: nickname,
       photoUrl: photoUrl,

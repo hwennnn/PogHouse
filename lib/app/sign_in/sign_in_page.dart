@@ -49,7 +49,7 @@ class SignInPage extends StatelessWidget {
     try {
       final user = await manager.signInWithGoogle();
       final database = Provider.of<Database>(context, listen: false);
-      await database.createUser(user);
+      await database.createPeople(user);
     } on Exception catch (e) {
       _showSignInError(context, e);
     }
@@ -59,7 +59,7 @@ class SignInPage extends StatelessWidget {
     try {
       final user = await manager.signInWithFacebook();
       final database = Provider.of<Database>(context, listen: false);
-      await database.createUser(user);
+      await database.createPeople(user);
     } on Exception catch (e) {
       _showSignInError(context, e);
     }

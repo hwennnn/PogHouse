@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/empty_content.dart';
+import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +21,9 @@ class ListItemsBuilder<T> extends StatelessWidget {
     if (snapshot.hasData) {
       final List<T> items = (T == Room)
           ? filterRoom(context, snapshot.data as List<Room>)
-          : snapshot.data;
+          : (T == People)
+              ? filterPeople(context, snapshot.data as List<People>)
+              : snapshot.data;
       if (items.isNotEmpty) {
         return _buildList(items);
       } else {
@@ -58,5 +61,10 @@ class ListItemsBuilder<T> extends StatelessWidget {
     }
 
     return result;
+  }
+
+  List<People> filterPeople(BuildContext context, List<People> people) {
+    final auth = Provider.of<AuthBase>(context, listen: false);
+    return people.where((i) => i.id != auth.currentUser.uid).toList();
   }
 }
