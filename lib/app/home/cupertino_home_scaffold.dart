@@ -21,8 +21,8 @@ class CupertinoHomeScaffold extends StatelessWidget {
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
         items: [
-          _buildItem(TabItem.chats),
-          _buildItem(TabItem.people),
+          _buildItem(context, TabItem.chats),
+          _buildItem(context, TabItem.people),
         ],
         onTap: (index) => onSelectTab(TabItem.values[index]),
       ),
@@ -36,15 +36,20 @@ class CupertinoHomeScaffold extends StatelessWidget {
     );
   }
 
-  BottomNavigationBarItem _buildItem(TabItem tabItem) {
+  BottomNavigationBarItem _buildItem(BuildContext context, TabItem tabItem) {
     final itemData = TabItemData.allTabs[tabItem];
-    final color = currentTab == tabItem ? Colors.indigo : Colors.grey;
+    final color =
+        currentTab == tabItem ? Theme.of(context).primaryColor : Colors.grey;
     return BottomNavigationBarItem(
       icon: Icon(
         itemData.icon,
         color: color,
       ),
-      label: itemData.title,
+      // ignore: deprecated_member_use
+      title: Text(
+        itemData.title,
+        style: TextStyle(color: color),
+      ),
     );
   }
 }

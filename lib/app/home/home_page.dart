@@ -87,11 +87,10 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.only(left: 5.0),
         child: InkWell(
           child: CircleAvatar(
-            backgroundColor: Colors.indigo,
-            radius: 15,
+            backgroundColor: Theme.of(context).primaryColor,
             child: ClipOval(
               child:
-                  Image.network(auth.profilePic, width: 30, fit: BoxFit.fill),
+                  Image.network(auth.profilePic, width: 35, fit: BoxFit.fill),
             ),
           ),
           onTap: () => _confirmSignOut(context),

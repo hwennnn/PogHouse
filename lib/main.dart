@@ -19,7 +19,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'PogHouse',
         theme: ThemeData(
-          primarySwatch: Colors.indigo,
+          primaryColor: Colors.indigo,
+          accentColor: Colors.white,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
