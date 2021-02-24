@@ -19,11 +19,7 @@ class ListItemsBuilder<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (snapshot.hasData) {
-      final List<T> items = (T == Room)
-          ? filterRoom(context, snapshot.data as List<Room>)
-          : (T == People)
-              ? filterPeople(context, snapshot.data as List<People>)
-              : snapshot.data;
+      final List<T> items = filtered(context, snapshot.data);
       if (items.isNotEmpty) {
         return _buildList(items);
       } else {
@@ -51,16 +47,11 @@ class ListItemsBuilder<T> extends StatelessWidget {
     );
   }
 
-  List<Room> filterRoom(BuildContext context, List<Room> rooms) {
-    List<Room> result = [];
-    final auth = Provider.of<AuthBase>(context, listen: false);
-    for (Room room in rooms) {
-      if (room.isPublic) {
-        result.add(room);
-      }
+  List<dynamic> filtered(BuildContext context, List<T> data) {
+    if (T == People) {
+      return filterPeople(context, data as List<People>);
     }
-
-    return result;
+    return snapshot.data;
   }
 
   List<People> filterPeople(BuildContext context, List<People> people) {
