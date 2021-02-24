@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poghouse/app/home/chat/chat_screen.dart';
 import 'package:poghouse/app/model/people.dart';
 
 class FavoriteContacts extends StatelessWidget {
@@ -43,25 +44,34 @@ class FavoriteContacts extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: favorites.length,
               itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    children: <Widget>[
-                      CircleAvatar(
-                        radius: 25.0,
-                        backgroundImage:
-                            NetworkImage(favorites[index].photoUrl),
-                      ),
-                      SizedBox(height: 6.0),
-                      Text(
-                        favorites[index].nickname,
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontSize: 13.0,
-                          fontWeight: FontWeight.w600,
+                return GestureDetector(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ChatScreen(),
+                      fullscreenDialog: true,
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Column(
+                      children: <Widget>[
+                        CircleAvatar(
+                          radius: 25.0,
+                          backgroundImage:
+                              NetworkImage(favorites[index].photoUrl),
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 6.0),
+                        Text(
+                          favorites[index].nickname,
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 13.0,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
