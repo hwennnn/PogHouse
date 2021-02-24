@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/empty_content.dart';
 import 'package:poghouse/app/model/people.dart';
-import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:provider/provider.dart';
 
