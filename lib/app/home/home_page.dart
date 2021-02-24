@@ -97,22 +97,21 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       title: Text((_currentTab == TabItem.chats) ? 'Chats' : "People"),
-      actions: (_currentTab == TabItem.chats)
-          ? <Widget>[
-              Padding(
-                padding: EdgeInsets.only(right: 12.0),
-                child: IconButton(
-                  icon: Icon(Icons.message),
-                  iconSize: 30.0,
-                  color: Colors.white,
-                  onPressed: () => RoomActionPage.show(
-                    context,
-                    database: Provider.of<Database>(context, listen: false),
-                  ),
-                ),
+      actions: <Widget>[
+        if (_currentTab == TabItem.chats)
+          Padding(
+            padding: EdgeInsets.only(right: 12.0),
+            child: IconButton(
+              icon: Icon(Icons.message),
+              iconSize: 30.0,
+              color: Colors.white,
+              onPressed: () => RoomActionPage.show(
+                context,
+                database: Provider.of<Database>(context, listen: false),
               ),
-            ]
-          : [],
+            ),
+          ),
+      ],
       elevation: 0.0,
     );
   }
