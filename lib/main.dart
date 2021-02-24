@@ -17,12 +17,15 @@ class MyApp extends StatelessWidget {
     return Provider<AuthBase>(
       create: (context) => Auth(),
       child: MaterialApp(
-        title: 'Time Tracker',
+        title: 'PogHouse',
         theme: ThemeData(
           primarySwatch: Colors.indigo,
           visualDensity: VisualDensity.adaptivePlatformDensity,
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
         ),
         home: LandingPage(),
+        debugShowCheckedModeBanner: false,
       ),
     );
   }

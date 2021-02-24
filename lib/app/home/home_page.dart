@@ -53,17 +53,29 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 12),
+          child: InkWell(
+            child: CircleAvatar(
+              child: ClipOval(
+                child:
+                    Image.network(auth.profilePic, width: 40, fit: BoxFit.fill),
+              ),
+              radius: 30,
+            ),
+            onTap: () => _confirmSignOut(context),
+          ),
+        ),
         title: Text('Home Page'),
         actions: <Widget>[
-          FlatButton(
-            child: Text(
-              'Logout',
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.white,
-              ),
+          Padding(
+            padding: EdgeInsets.only(right: 5.0),
+            child: IconButton(
+              icon: Icon(Icons.message),
+              iconSize: 30.0,
+              color: Colors.white,
+              onPressed: () {},
             ),
-            onPressed: () => _confirmSignOut(context),
           ),
         ],
       ),
