@@ -19,4 +19,12 @@ class People {
       photoUrl: photoUrl,
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'nickname': nickname,
+      'photoUrl': photoUrl,
+    };
+  }
 }

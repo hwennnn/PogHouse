@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/app/sign_in/sign_in_manager.dart';
 import 'package:poghouse/app/sign_in/social_sign_in_button.dart';
 import 'package:poghouse/common_widgets/loading.dart';
@@ -49,7 +50,12 @@ class SignInPage extends StatelessWidget {
     try {
       final user = await manager.signInWithGoogle();
       final database = Provider.of<Database>(context, listen: false);
-      await database.createPeople(user);
+      final people = People(
+        id: user.uid,
+        nickname: user.displayName,
+        photoUrl: user.photoURL,
+      );
+      await database.createPeople(people);
     } on Exception catch (e) {
       _showSignInError(context, e);
     }
@@ -59,7 +65,12 @@ class SignInPage extends StatelessWidget {
     try {
       final user = await manager.signInWithFacebook();
       final database = Provider.of<Database>(context, listen: false);
-      await database.createPeople(user);
+      final people = People(
+        id: user.uid,
+        nickname: user.displayName,
+        photoUrl: user.photoURL,
+      );
+      await database.createPeople(people);
     } on Exception catch (e) {
       _showSignInError(context, e);
     }

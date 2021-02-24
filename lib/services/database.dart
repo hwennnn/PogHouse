@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/app/model/rooms.dart';
 import 'package:uuid/uuid.dart';
@@ -6,11 +6,14 @@ import 'api_path.dart';
 import 'firestore_service.dart';
 
 abstract class Database {
-  Future<void> createPeople(User user);
+  Future<void> createPeople(People people);
+  Future<void> setFavorite(String uid, People people);
+  Future<void> removeFavorite(String uid, People people);
   Future<void> setRoom(Room room);
   Future<void> deleteRoom(Room room);
   Stream<List<Room>> roomsStream();
   Stream<List<People>> peopleStream();
+  Stream<List<People>> favoriteStream(String uid);
 }
 
 String get documentId => Uuid().v4();
@@ -20,15 +23,23 @@ class FirestoreDatabase implements Database {
 
   final _service = FirestoreService.instance;
 
-  Future<void> createPeople(User user) async {
+  Future<void> createPeople(People people) async {
     _service.setData(
-      path: APIPath.aPeople(user.uid),
-      data: {
-        'id': user.uid,
-        'nickname': user.displayName,
-        'photoUrl': user.photoURL
-      },
+      path: APIPath.aPeople(people.id),
+      data: people.toMap(),
     );
+  }
+
+  Future<void> setFavorite(String uid, People people) async {
+    final user = FirebaseFirestore.instance.collection('people').doc(uid);
+    await user.collection('favorite').doc(people.id).set(
+          people.toMap(),
+        );
+  }
+
+  Future<void> removeFavorite(String uid, People people) async {
+    final user = FirebaseFirestore.instance.collection('people').doc(uid);
+    await user.collection('favorite').doc(people.id).delete();
   }
 
   Future<void> setRoom(Room room) => _service.setData(
@@ -47,6 +58,12 @@ class FirestoreDatabase implements Database {
 
   Stream<List<People>> peopleStream() => _service.collectionStream(
         path: APIPath.people(),
+        builder: (data) => People.fromMap(data),
+      );
+
+  Stream<List<People>> favoriteStream(String uid) =>
+      _service.favoriteCollectionStream(
+        uid: uid,
         builder: (data) => People.fromMap(data),
       );
 }

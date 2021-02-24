@@ -33,27 +33,6 @@ class ChatHome extends StatelessWidget {
 
   Widget _buildContents(BuildContext context) {
     final database = Provider.of<Database>(context, listen: false);
-    return StreamBuilder<List<Room>>(
-      stream: database.roomsStream(),
-      builder: (context, snapshot) {
-        return ListItemsBuilder<Room>(
-          snapshot: snapshot,
-          itemBuilder: (context, room) => Dismissible(
-            key: Key('room-${room.id}'),
-            background: Container(color: Colors.red),
-            direction: DismissDirection.endToStart,
-            onDismissed: (direction) => _delete(context, room),
-            child: RoomListTile(
-              room: room,
-              onTap: () => RoomActionPage.show(
-                context,
-                database: Provider.of<Database>(context, listen: false),
-                room: room,
-              ),
-            ),
-          ),
-        );
-      },
-    );
+    return Container();
   }
 }

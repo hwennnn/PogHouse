@@ -29,4 +29,20 @@ class FirestoreService {
         )
         .toList());
   }
+
+  Stream<List<T>> favoriteCollectionStream<T>({
+    @required String uid,
+    @required T Function(Map<String, dynamic> data) builder,
+  }) {
+    final reference = FirebaseFirestore.instance
+        .collection('people')
+        .doc(uid)
+        .collection('favorite');
+    final snapshots = reference.snapshots();
+    return snapshots.map((snapshot) => snapshot.docs
+        .map(
+          (snapshot) => builder(snapshot.data()),
+        )
+        .toList());
+  }
 }
