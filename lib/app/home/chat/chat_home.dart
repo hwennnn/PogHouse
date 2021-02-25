@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/favorite_contacts.dart';
 import 'package:poghouse/common_widgets/loading.dart';
+import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,7 @@ class _ChatHomeState extends State<ChatHome> {
 
   @override
   Widget build(BuildContext context) {
+    print("Build Home");
     return _buildContents(context);
   }
 
@@ -26,15 +28,20 @@ class _ChatHomeState extends State<ChatHome> {
     return StreamBuilder(
       stream: database.favoriteStream(auth.currentUser.uid),
       builder: (context, snapshot) {
-        if (snapshot != null && snapshot.hasData) {
+        if (snapshot.hasError) {
+          showExceptionAlertDialog(
+            context,
+            title: "Error",
+            exception: snapshot.error,
+          );
+        } else if (snapshot.connectionState == ConnectionState.active) {
           final favorites = snapshot.data;
-          print(favorites);
+          print("Home: $favorites");
           return FavoriteContacts(
             favorites: favorites,
           );
-        } else {
-          return Loading();
         }
+        return Loading();
       },
     );
   }

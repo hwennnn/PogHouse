@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/people/people_list_items_builder.dart';
 import 'package:poghouse/app/home/people/people_list_tile.dart';
 import 'package:poghouse/common_widgets/loading.dart';
+import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +21,7 @@ class _PeoplePageState extends State<PeopleHome> {
 
   @override
   Widget build(BuildContext context) {
+    print("Build People");
     return _buildContents(context);
   }
 
@@ -31,11 +33,17 @@ class _PeoplePageState extends State<PeopleHome> {
         database.favoriteStream(auth.currentUser.uid)
       ]),
       builder: (context, snapshot) {
-        if (snapshot != null && snapshot.hasData) {
+        if (snapshot.hasError) {
+          showExceptionAlertDialog(
+            context,
+            title: "Error",
+            exception: snapshot.error,
+          );
+        } else if (snapshot.connectionState == ConnectionState.active) {
           final people = snapshot.data[0];
           final favorite = [for (var p in snapshot.data[1]) p.id as String];
-          print(people);
-          print(favorite);
+          print("People: $people");
+          print("People: $favorite");
 
           return PeopleListItemsBuilder(
             people: people,
@@ -45,9 +53,8 @@ class _PeoplePageState extends State<PeopleHome> {
               favorite: favorite,
             ),
           );
-        } else {
-          return Loading();
         }
+        return Loading();
       },
     );
   }
