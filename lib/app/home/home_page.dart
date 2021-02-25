@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/chat_home.dart';
 import 'package:poghouse/app/home/chat/room_action_page.dart';

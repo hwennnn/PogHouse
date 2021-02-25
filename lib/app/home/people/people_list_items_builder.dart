@@ -47,6 +47,9 @@ class PeopleListItemsBuilder extends StatelessWidget {
 
   List<People> filterPeople(BuildContext context, List<People> people) {
     final auth = Provider.of<AuthBase>(context, listen: false);
-    return people.where((i) => i.id != auth.currentUser.uid).toList();
+    List<People> filtered =
+        people.where((i) => i.id != auth.currentUser.uid).toList();
+    filtered.sort((a, b) => a.nickname.compareTo(b.nickname));
+    return filtered;
   }
 }

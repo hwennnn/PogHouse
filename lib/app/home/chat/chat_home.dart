@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/favorite_contacts.dart';
+import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/common_widgets/loading.dart';
 import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
@@ -35,7 +36,9 @@ class _ChatHomeState extends State<ChatHome> {
             exception: snapshot.error,
           );
         } else if (snapshot.connectionState == ConnectionState.active) {
-          final favorites = snapshot.data;
+          List<People> favorites = snapshot.data;
+          favorites.sort((a, b) =>
+              a.nickname.toLowerCase().compareTo(b.nickname.toLowerCase()));
           // print("Chat: $favorites");
           return FavoriteContacts(
             favorites: favorites,
