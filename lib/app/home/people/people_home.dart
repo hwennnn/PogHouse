@@ -21,7 +21,7 @@ class _PeoplePageState extends State<PeopleHome> {
 
   @override
   Widget build(BuildContext context) {
-    print("Build People");
+    // print("Build People");
     return _buildContents(context);
   }
 
@@ -42,8 +42,8 @@ class _PeoplePageState extends State<PeopleHome> {
         } else if (snapshot.connectionState == ConnectionState.active) {
           final people = snapshot.data[0];
           final favorite = [for (var p in snapshot.data[1]) p.id as String];
-          print("People: $people");
-          print("People: $favorite");
+          // print("People: $people");
+          // print("People: $favorite");
 
           return PeopleListItemsBuilder(
             people: people,

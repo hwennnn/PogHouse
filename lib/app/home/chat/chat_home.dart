@@ -19,7 +19,7 @@ class _ChatHomeState extends State<ChatHome> {
 
   @override
   Widget build(BuildContext context) {
-    print("Build Home");
+    // print("Build Chat");
     return _buildContents(context);
   }
 
@@ -36,7 +36,7 @@ class _ChatHomeState extends State<ChatHome> {
           );
         } else if (snapshot.connectionState == ConnectionState.active) {
           final favorites = snapshot.data;
-          print("Home: $favorites");
+          // print("Chat: $favorites");
           return FavoriteContacts(
             favorites: favorites,
           );
