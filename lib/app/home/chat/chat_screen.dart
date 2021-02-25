@@ -5,6 +5,16 @@ class ChatScreen extends StatefulWidget {
   ChatScreen({@required this.people});
   final People people;
 
+  static Future<void> show(BuildContext context, {People people}) async {
+    await Navigator.of(context, rootNavigator: true).push(
+      MaterialPageRoute(
+        builder: (context) => ChatScreen(
+          people: people,
+        ),
+      ),
+    );
+  }
+
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
