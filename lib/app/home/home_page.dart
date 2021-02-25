@@ -86,10 +86,10 @@ class _HomePageState extends State<HomePage> {
   Widget appBar() {
     return AppBar(
       leading: Padding(
-        padding: const EdgeInsets.only(left: 5.0),
+        padding: const EdgeInsets.only(left: 12.0),
         child: CustomCircleAvatar(
           photoUrl: auth.profilePic,
-          width: 35,
+          width: 40,
           backgroundColor: Theme.of(context).primaryColor,
           onTap: () => _confirmSignOut(context),
         ),
