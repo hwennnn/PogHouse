@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/chat_screen.dart';
 import 'package:poghouse/app/model/people.dart';
+import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
 
 class FavoriteContacts extends StatelessWidget {
   FavoriteContacts({this.favorites});
@@ -56,10 +57,9 @@ class FavoriteContacts extends StatelessWidget {
                     padding: EdgeInsets.all(10.0),
                     child: Column(
                       children: <Widget>[
-                        CircleAvatar(
-                          radius: 25.0,
-                          backgroundImage:
-                              NetworkImage(favorites[index].photoUrl),
+                        CustomCircleAvatar(
+                          photoUrl: favorites[index].photoUrl,
+                          width: 50,
                         ),
                         SizedBox(height: 6.0),
                         Text(

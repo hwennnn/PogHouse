@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/chat_home.dart';
 import 'package:poghouse/app/home/chat/room_action_page.dart';
 import 'package:poghouse/app/home/cupertino_home_scaffold.dart';
 import 'package:poghouse/app/home/people/people_home.dart';
 import 'package:poghouse/app/home/tab_item.dart';
+import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
 import 'package:poghouse/common_widgets/show_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
@@ -85,14 +87,10 @@ class _HomePageState extends State<HomePage> {
     return AppBar(
       leading: Padding(
         padding: const EdgeInsets.only(left: 5.0),
-        child: InkWell(
-          child: CircleAvatar(
-            backgroundColor: Theme.of(context).primaryColor,
-            child: ClipOval(
-              child:
-                  Image.network(auth.profilePic, width: 35, fit: BoxFit.fill),
-            ),
-          ),
+        child: CustomCircleAvatar(
+          photoUrl: auth.profilePic,
+          width: 35,
+          backgroundColor: Theme.of(context).primaryColor,
           onTap: () => _confirmSignOut(context),
         ),
       ),

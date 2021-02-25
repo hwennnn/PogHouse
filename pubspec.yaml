@@ -36,6 +36,7 @@ dependencies:
   provider: ^4.3.3
   uuid: ^2.2.2
   rxdart: ^0.25.0
+  cached_network_image: ^2.5.0
 
 # Fix "pick account" for google auth on iOS
 dependency_overrides:

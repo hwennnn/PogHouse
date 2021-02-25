@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/model/people.dart';
+import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
 import 'package:provider/provider.dart';
@@ -30,11 +32,9 @@ class PeopleListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     bool _isFavourite = isFavourite(context);
     return ListTile(
-      leading: CircleAvatar(
-        child: ClipOval(
-          child: Image.network(people.photoUrl, width: 40, fit: BoxFit.fill),
-        ),
-        radius: 20,
+      leading: CustomCircleAvatar(
+        photoUrl: people.photoUrl,
+        width: 40,
       ),
       title: Text(people.nickname),
       trailing: IconButton(
