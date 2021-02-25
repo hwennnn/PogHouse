@@ -45,12 +45,13 @@ class FavoriteContacts extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: favorites.length,
               itemBuilder: (BuildContext context, int index) {
+                final people = favorites[index];
                 return GestureDetector(
-                  onTap: () => Navigator.push(
-                    context,
+                  onTap: () => Navigator.of(context, rootNavigator: true).push(
                     MaterialPageRoute(
-                      builder: (_) => ChatScreen(),
-                      fullscreenDialog: true,
+                      builder: (context) => ChatScreen(
+                        people: people,
+                      ),
                     ),
                   ),
                   child: Padding(
@@ -58,12 +59,12 @@ class FavoriteContacts extends StatelessWidget {
                     child: Column(
                       children: <Widget>[
                         CustomCircleAvatar(
-                          photoUrl: favorites[index].photoUrl,
+                          photoUrl: people.photoUrl,
                           width: 50,
                         ),
                         SizedBox(height: 6.0),
                         Text(
-                          favorites[index].nickname,
+                          people.nickname,
                           style: TextStyle(
                             color: Colors.black54,
                             fontSize: 13.0,
