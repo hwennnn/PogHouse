@@ -44,6 +44,7 @@ class RoomActionPage extends StatefulWidget {
 
 class _RoomActionPageState extends State<RoomActionPage> {
   final _formKey = GlobalKey<FormState>();
+  Database get database => widget.database;
   Auth get auth => widget.auth;
   List<People> get people => widget.people;
   List<String> _members;
@@ -79,7 +80,8 @@ class _RoomActionPageState extends State<RoomActionPage> {
           members: _members,
           createdAt: currentMs,
         );
-        await widget.database.setRoom(room);
+        await database.setRoom(room);
+        await database.addRoomToPeople(room);
         Navigator.of(context).pop();
       } on FirebaseException catch (e) {
         showExceptionAlertDialog(
