@@ -60,6 +60,27 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildContents(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
+      body: Container(
+        color: Theme.of(context).primaryColor,
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).accentColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30.0),
+                    topRight: Radius.circular(30.0),
+                  ),
+                ),
+                child: Column(
+                  children: <Widget>[Container()],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
