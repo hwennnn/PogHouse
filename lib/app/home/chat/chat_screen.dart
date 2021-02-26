@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:poghouse/app/model/people.dart';
+import 'package:poghouse/app/model/rooms.dart';
 
 class ChatScreen extends StatefulWidget {
-  ChatScreen({@required this.people});
-  final People people;
+  ChatScreen({@required this.room});
+  final Room room;
 
-  static Future<void> show(BuildContext context, {People people}) async {
+  static Future<void> show(BuildContext context, {Room room}) async {
     await Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
         builder: (context) => ChatScreen(
-          people: people,
+          room: room,
         ),
       ),
     );
@@ -20,7 +20,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  People get people => widget.people;
+  Room get room => widget.room;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class _ChatScreenState extends State<ChatScreen> {
         title: Text("Messages"),
       ),
       body: Center(
-        child: Text(people.nickname),
+        child: Text(room.name),
       ),
     );
   }

@@ -46,27 +46,24 @@ class FavoriteContacts extends StatelessWidget {
               itemCount: favorites.length,
               itemBuilder: (BuildContext context, int index) {
                 final people = favorites[index];
-                return GestureDetector(
-                  onTap: () => ChatScreen.show(context, people: people),
-                  child: Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Column(
-                      children: <Widget>[
-                        CustomCircleAvatar(
-                          photoUrl: people.photoUrl,
-                          width: 50,
+                return Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    children: <Widget>[
+                      CustomCircleAvatar(
+                        photoUrl: people.photoUrl,
+                        width: 50,
+                      ),
+                      SizedBox(height: 6.0),
+                      Text(
+                        people.nickname,
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 13.0,
+                          fontWeight: FontWeight.w600,
                         ),
-                        SizedBox(height: 6.0),
-                        Text(
-                          people.nickname,
-                          style: TextStyle(
-                            color: Colors.black54,
-                            fontSize: 13.0,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 );
               },

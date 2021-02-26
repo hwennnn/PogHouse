@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:poghouse/app/home/chat/chat_screen.dart';
 import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
 import 'package:poghouse/common_widgets/loading.dart';
@@ -14,13 +15,19 @@ class RoomListTile extends StatelessWidget {
   final String roomID;
   final VoidCallback onTap;
 
-  Widget roomListTile(Room room) {
-    return ListTile(
-      leading: CustomCircleAvatar(
-        photoUrl: room.photoUrl,
-        width: 40,
+  Widget roomListTile(BuildContext context, Room room) {
+    return InkWell(
+      child: ListTile(
+        leading: CustomCircleAvatar(
+          photoUrl: room.photoUrl,
+          width: 40,
+        ),
+        title: Text(room.name),
       ),
-      title: Text(room.name),
+      onTap: () => ChatScreen.show(
+        context,
+        room: room,
+      ),
     );
   }
 
@@ -40,7 +47,7 @@ class RoomListTile extends StatelessWidget {
           Map<String, dynamic> result =
               new Map<String, dynamic>.from(snapshot.data.data());
           Room room = Room.fromMap(result);
-          return roomListTile(room);
+          return roomListTile(context, room);
         }
         return Loading();
       },
