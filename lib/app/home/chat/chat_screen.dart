@@ -23,6 +23,35 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   Room get room => widget.room;
 
+  Widget appBar() {
+    return AppBar(
+      automaticallyImplyLeading: false, // Don't show the leading button
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          IconButton(
+            icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+          ),
+          CustomCircleAvatar(
+            photoUrl: room.photoUrl,
+            width: 40,
+            backgroundColor: Theme.of(context).primaryColor,
+          ),
+          SizedBox(width: 10),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(room.name),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return _buildContents(context);
@@ -30,32 +59,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildContents(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false, // Don't show the leading button
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.arrow_back_ios, color: Colors.white),
-              onPressed: () => Navigator.pop(context),
-            ),
-            CustomCircleAvatar(
-              photoUrl: room.photoUrl,
-              width: 40,
-              backgroundColor: Theme.of(context).primaryColor,
-            ),
-            SizedBox(width: 10),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(room.name),
-              ],
-            ),
-          ],
-        ),
-      ),
+      appBar: appBar(),
     );
   }
 }
