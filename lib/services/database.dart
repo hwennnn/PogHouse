@@ -61,11 +61,11 @@ class FirestoreDatabase implements Database {
         path: APIPath.room(room.id),
       );
 
-  Future<void> addRoomToPeople(Room room) {
+  Future<void> addRoomToPeople(Room room) async {
     List<String> members = [room.owner, ...room.members];
     for (String id in members) {
       final user = FirebaseFirestore.instance.collection('people').doc(id);
-      user.update({
+      await user.update({
         "rooms": FieldValue.arrayUnion([room.id])
       });
     }
