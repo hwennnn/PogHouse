@@ -11,11 +11,9 @@ class PeopleListItemsBuilder extends StatelessWidget {
   const PeopleListItemsBuilder({
     Key key,
     @required this.people,
-    @required this.favorite,
     @required this.itemBuilder,
   }) : super(key: key);
   final List<People> people;
-  final List<String> favorite;
   final ItemWidgetBuilder itemBuilder;
 
   @override

@@ -7,6 +7,7 @@ import 'firestore_service.dart';
 
 abstract class Database {
   Future<void> createPeople(People people);
+  Future<List<People>> retrieveAllPeople();
   Future<void> setFavorite(String uid, People people);
   Future<void> removeFavorite(String uid, People people);
   Future<void> setRoom(Room room);
@@ -28,6 +29,14 @@ class FirestoreDatabase implements Database {
       path: APIPath.aPeople(people.id),
       data: people.toMap(),
     );
+  }
+
+  Future<List<People>> retrieveAllPeople() async {
+    final snapshots =
+        await FirebaseFirestore.instance.collection('people').get();
+    List<People> people =
+        snapshots.docs.map((doc) => People.fromMap(doc.data())).toList();
+    return people;
   }
 
   Future<void> setFavorite(String uid, People people) async {

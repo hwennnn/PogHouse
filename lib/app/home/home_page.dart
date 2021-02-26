@@ -105,6 +105,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () => RoomActionPage.show(
                 context,
                 database: Provider.of<Database>(context, listen: false),
+                auth: Provider.of<AuthBase>(context, listen: false),
               ),
             ),
           ),

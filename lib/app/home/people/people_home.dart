@@ -47,7 +47,6 @@ class _PeoplePageState extends State<PeopleHome> {
 
           return PeopleListItemsBuilder(
             people: people,
-            favorite: favorite,
             itemBuilder: (context, people) => PeopleListTile(
               people: people,
               favorite: favorite,

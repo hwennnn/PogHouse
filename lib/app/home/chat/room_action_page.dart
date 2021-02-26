@@ -1,22 +1,38 @@
-import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:poghouse/app/home/chat/room_people_list_tile.dart';
+import 'package:poghouse/app/home/people/people_list_items_builder.dart';
+import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
+import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
 
 class RoomActionPage extends StatefulWidget {
-  const RoomActionPage({Key key, @required this.database, this.room})
+  const RoomActionPage(
+      {Key key,
+      @required this.database,
+      @required this.auth,
+      this.room,
+      this.people})
       : super(key: key);
+  final Auth auth;
   final Database database;
   final Room room;
+  final List<People> people;
 
   static Future<void> show(BuildContext context,
-      {Database database, Room room}) async {
+      {Database database, Room room, Auth auth}) async {
+    List<People> fetchedPeople = await database.retrieveAllPeople();
+    print(auth.profilePic);
+
     await Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
-        builder: (context) => RoomActionPage(database: database, room: room),
+        builder: (context) => RoomActionPage(
+            database: database, auth: auth, room: room, people: fetchedPeople),
         fullscreenDialog: true,
       ),
     );
@@ -28,17 +44,18 @@ class RoomActionPage extends StatefulWidget {
 
 class _RoomActionPageState extends State<RoomActionPage> {
   final _formKey = GlobalKey<FormState>();
-
+  Auth get auth => widget.auth;
+  List<People> get people => widget.people;
+  List<String> _members;
   String _name;
-  bool _isPublic = false;
 
   @override
   void initState() {
     super.initState();
     if (widget.room != null) {
       _name = widget.room.name;
-      _isPublic = widget.room.isPublic;
     }
+    _members = [];
   }
 
   bool _validateAndSaveForm() {
@@ -54,7 +71,14 @@ class _RoomActionPageState extends State<RoomActionPage> {
     if (_validateAndSaveForm()) {
       try {
         final id = widget.room?.id ?? documentId;
-        final room = Room(id: id, name: _name, isPublic: _isPublic);
+        final currentMs = DateTime.now().millisecondsSinceEpoch;
+        final room = Room(
+          id: id,
+          name: _name,
+          owner: auth.currentUser.uid,
+          members: _members,
+          createdAt: currentMs,
+        );
         await widget.database.setRoom(room);
         Navigator.of(context).pop();
       } on FirebaseException catch (e) {
@@ -89,7 +113,7 @@ class _RoomActionPageState extends State<RoomActionPage> {
   }
 
   Widget _buildContents() {
-    return SingleChildScrollView(
+    return Container(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Card(
@@ -115,30 +139,43 @@ class _RoomActionPageState extends State<RoomActionPage> {
   List<Widget> _buildFormChildren() {
     return [
       TextFormField(
-        decoration: InputDecoration(labelText: 'Room name'),
+        decoration: InputDecoration(labelText: 'Room Name'),
         initialValue: _name,
         validator: (value) => value.isNotEmpty ? null : 'Name can\'t be empty',
         onSaved: (value) => _name = value,
       ),
       SizedBox(height: 20),
-      // switch
-      (!Platform.isIOS)
-          ? Switch(
-              value: _isPublic,
-              onChanged: (newValue) {
-                setState(() {
-                  _isPublic = newValue;
-                });
-              },
-            )
-          : CupertinoSwitch(
-              value: _isPublic,
-              onChanged: (newValue) {
-                setState(() {
-                  _isPublic = newValue;
-                });
-              },
-            ),
+      Text(
+        "Members",
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      SizedBox(height: 10),
+      _buildPeopleList(),
     ];
+  }
+
+  Widget _buildPeopleList() {
+    return Expanded(
+      child: PeopleListItemsBuilder(
+        people: people,
+        itemBuilder: (context, people) => RoomPeopleListTile(
+          people: people,
+          members: _members,
+          onTap: () => _addToMembers(people),
+        ),
+      ),
+    );
+  }
+
+  void _addToMembers(People people) {
+    setState(() {
+      if (!_members.contains(people.id)) {
+        _members.add(people.id);
+      } else {
+        _members.remove(people.id);
+      }
+    });
   }
 }
