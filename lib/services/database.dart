@@ -13,7 +13,8 @@ abstract class Database {
   Future<void> setRoom(Room room);
   Future<void> deleteRoom(Room room);
   Future<void> addRoomToPeople(Room room);
-  Stream<List<Room>> roomsStream();
+  Stream<DocumentSnapshot> roomStream(String id);
+  Stream<List<Room>> roomsStream(String uid);
   Stream<List<People>> peopleStream();
   Stream<List<People>> favoriteStream(String uid);
 }
@@ -65,14 +66,20 @@ class FirestoreDatabase implements Database {
     List<String> members = [room.owner, ...room.members];
     for (String id in members) {
       final user = FirebaseFirestore.instance.collection('people').doc(id);
-      await user.update({
-        "rooms": FieldValue.arrayUnion([room.id])
+      await user.collection('rooms').doc(room.id).set({
+        'id': room.id,
       });
     }
   }
 
-  Stream<List<Room>> roomsStream() => _service.collectionStream(
-        path: APIPath.rooms(),
+  Stream<DocumentSnapshot> roomStream(String id) =>
+      _service.roomCollectionStream(
+        roomID: id,
+        builder: (data) => Room.fromMap(data),
+      );
+
+  Stream<List<Room>> roomsStream(String uid) => _service.roomsCollectionStream(
+        uid: uid,
         builder: (data) => Room.fromMap(data),
       );
 

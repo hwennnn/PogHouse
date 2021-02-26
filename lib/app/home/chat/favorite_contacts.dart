@@ -39,7 +39,7 @@ class FavoriteContacts extends StatelessWidget {
             ),
           ),
           Container(
-            height: 120.0,
+            height: 95.0,
             child: ListView.builder(
               padding: EdgeInsets.only(left: 10.0),
               scrollDirection: Axis.horizontal,

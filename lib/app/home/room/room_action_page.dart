@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:poghouse/app/home/chat/room_people_list_tile.dart';
+import 'package:poghouse/app/home/room/room_people_list_tile.dart';
 import 'package:poghouse/app/home/people/people_list_items_builder.dart';
 import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/app/model/rooms.dart';
@@ -28,7 +28,6 @@ class RoomActionPage extends StatefulWidget {
   static Future<void> show(BuildContext context,
       {Database database, Room room, Auth auth}) async {
     List<People> fetchedPeople = await database.retrieveAllPeople();
-    print(auth.profilePic);
 
     await Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
@@ -82,6 +81,8 @@ class _RoomActionPageState extends State<RoomActionPage> {
         final room = Room(
           id: id,
           name: _name,
+          photoUrl:
+              'https://yt3.ggpht.com/ytc/AAUvwnhqxIOAZQ5sa7VtGMUpY3lmRO8tMHDidWx0oqkr=s176-c-k-c0x00ffffff-no-rj',
           owner: auth.currentUser.uid,
           members: _members,
           createdAt: currentMs,

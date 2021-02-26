@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:poghouse/app/model/rooms.dart';
 
 class FirestoreService {
   FirestoreService._();
@@ -38,6 +39,32 @@ class FirestoreService {
         .collection('people')
         .doc(uid)
         .collection('favorite');
+    final snapshots = reference.snapshots();
+    return snapshots.map((snapshot) => snapshot.docs
+        .map(
+          (snapshot) => builder(snapshot.data()),
+        )
+        .toList());
+  }
+
+  Stream<DocumentSnapshot> roomCollectionStream<T>({
+    @required String roomID,
+    @required T Function(Map<String, dynamic> data) builder,
+  }) {
+    final reference =
+        FirebaseFirestore.instance.collection('rooms').doc(roomID);
+    final snapshots = reference.snapshots();
+    return snapshots;
+  }
+
+  Stream<List<T>> roomsCollectionStream<T>({
+    @required String uid,
+    @required T Function(Map<String, dynamic> data) builder,
+  }) {
+    final reference = FirebaseFirestore.instance
+        .collection('people')
+        .doc(uid)
+        .collection('rooms');
     final snapshots = reference.snapshots();
     return snapshots.map((snapshot) => snapshot.docs
         .map(

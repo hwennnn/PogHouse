@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/chat_home.dart';
-import 'package:poghouse/app/home/chat/room_action_page.dart';
+import 'package:poghouse/app/home/room/room_action_page.dart';
 import 'package:poghouse/app/home/cupertino_home_scaffold.dart';
 import 'package:poghouse/app/home/people/people_home.dart';
 import 'package:poghouse/app/home/tab_item.dart';

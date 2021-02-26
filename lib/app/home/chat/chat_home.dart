@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/favorite_contacts.dart';
+import 'package:poghouse/app/home/chat/recent_chats/recent_chats.dart';
 import 'package:poghouse/app/model/people.dart';
+import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/loading.dart';
 import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
@@ -49,6 +52,33 @@ class _ChatHomeState extends State<ChatHome> {
     );
   }
 
+  Widget recentChats() {
+    final database = Provider.of<Database>(context, listen: false);
+    final uid = auth.currentUser.uid;
+    return StreamBuilder(
+      stream: database.roomsStream(uid),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          showExceptionAlertDialog(
+            context,
+            title: "Error",
+            exception: snapshot.error,
+          );
+        } else if (snapshot.connectionState == ConnectionState.active) {
+          List<Room> rooms = snapshot.data;
+          List<String> roomIDs = rooms.map((e) => e.id).toList();
+          print("Rooms: $roomIDs");
+          return Expanded(
+            child: RecentChats(
+              rooms: roomIDs,
+            ),
+          );
+        }
+        return Loading();
+      },
+    );
+  }
+
   Widget _buildContents(BuildContext context) {
     return Container(
       color: Theme.of(context).primaryColor,
@@ -66,6 +96,7 @@ class _ChatHomeState extends State<ChatHome> {
               child: Column(
                 children: <Widget>[
                   favoriteContacts(),
+                  recentChats(),
                 ],
               ),
             ),
