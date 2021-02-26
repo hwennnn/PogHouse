@@ -7,6 +7,7 @@ import 'package:poghouse/app/home/chat/room_people_list_tile.dart';
 import 'package:poghouse/app/home/people/people_list_items_builder.dart';
 import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/app/model/rooms.dart';
+import 'package:poghouse/common_widgets/loading.dart';
 import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
@@ -49,6 +50,7 @@ class _RoomActionPageState extends State<RoomActionPage> {
   List<People> get people => widget.people;
   List<String> _members;
   String _name;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -71,6 +73,10 @@ class _RoomActionPageState extends State<RoomActionPage> {
   Future<void> _submit() async {
     if (_validateAndSaveForm()) {
       try {
+        setState(() {
+          _isLoading = true;
+        });
+
         final id = widget.room?.id ?? documentId;
         final currentMs = DateTime.now().millisecondsSinceEpoch;
         final room = Room(
@@ -80,8 +86,14 @@ class _RoomActionPageState extends State<RoomActionPage> {
           members: _members,
           createdAt: currentMs,
         );
+
         await database.setRoom(room);
         await database.addRoomToPeople(room);
+
+        setState(() {
+          _isLoading = false;
+        });
+
         Navigator.of(context).pop();
       } on FirebaseException catch (e) {
         showExceptionAlertDialog(
@@ -115,16 +127,24 @@ class _RoomActionPageState extends State<RoomActionPage> {
   }
 
   Widget _buildContents() {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Card(
+    return Stack(
+      children: <Widget>[
+        Container(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: _buildForm(),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: _buildForm(),
+              ),
+            ),
           ),
         ),
-      ),
+        // Loading
+        Positioned(
+          child: _isLoading ? const Loading() : Container(),
+        ),
+      ],
     );
   }
 
