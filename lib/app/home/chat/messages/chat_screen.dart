@@ -36,7 +36,15 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   Room get room => widget.room;
   Database get database => widget.database;
-  String _content;
+  final textController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    textController.dispose();
+    super.dispose();
+  }
 
   Widget appBar() {
     return AppBar(
@@ -147,10 +155,8 @@ class _ChatScreenState extends State<ChatScreen> {
           children: <Widget>[
             Expanded(
               child: TextField(
+                controller: textController,
                 textCapitalization: TextCapitalization.sentences,
-                onChanged: (value) => setState(() {
-                  _content = value;
-                }),
                 decoration: InputDecoration.collapsed(
                   hintText: 'Send a message...',
                 ),
@@ -172,14 +178,12 @@ class _ChatScreenState extends State<ChatScreen> {
     final currentMs = DateTime.now().millisecondsSinceEpoch;
     final message = Message(
         id: documentId,
-        content: _content,
+        content: textController.text,
         sender: uid,
         sentAt: currentMs,
         roomID: room.id);
     database.setMessage(message);
-    setState(() {
-      _content = "";
-    });
+    textController.clear();
   }
 
   @override
