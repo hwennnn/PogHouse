@@ -51,6 +51,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   Room get room => widget.room;
   Database get database => widget.database;
+  Map<String, People> get members => widget.members;
   final textController = TextEditingController();
   final focusNode = FocusNode();
 
@@ -152,6 +153,7 @@ class _ChatScreenState extends State<ChatScreen> {
               return MessageListTile(
                 message: message,
                 isMe: isMe,
+                sender: members[message.sender],
               );
             },
           );
@@ -181,7 +183,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 padding: EdgeInsets.only(left: 10),
                 child: TextField(
                   focusNode: focusNode,
-                  autofocus: true,
                   controller: textController,
                   textCapitalization: TextCapitalization.sentences,
                   decoration: InputDecoration.collapsed(
