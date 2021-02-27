@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/messages/message_list_tile.dart';
 import 'package:poghouse/app/model/message.dart';
+import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
 import 'package:poghouse/common_widgets/loading.dart';
@@ -12,21 +13,35 @@ import 'package:provider/provider.dart';
 class ChatScreen extends StatefulWidget {
   ChatScreen({
     @required this.room,
+    @required this.members,
     this.database,
   });
   final Room room;
+  final Map<String, People> members;
   final Database database;
 
   static Future<void> show(BuildContext context,
       {Room room, Database database}) async {
+    Map<String, People> members = await constructMembersMap(room, database);
     await Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
         builder: (context) => ChatScreen(
           room: room,
+          members: members,
           database: database,
         ),
       ),
     );
+  }
+
+  static Future<Map<String, People>> constructMembersMap(
+      Room room, Database database) async {
+    List<People> members = await database.retrieveRoomMembers(room);
+    Map<String, People> map = new Map();
+    for (People people in members) {
+      map[people.id] = people;
+    }
+    return map;
   }
 
   @override
