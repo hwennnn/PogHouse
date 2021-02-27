@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:poghouse/app/home/chat/chat_screen.dart';
+import 'package:poghouse/app/home/chat/messages/chat_screen.dart';
 import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
 import 'package:poghouse/common_widgets/loading.dart';
