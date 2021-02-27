@@ -37,6 +37,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Room get room => widget.room;
   Database get database => widget.database;
   final textController = TextEditingController();
+  final focusNode = FocusNode();
 
   @override
   void dispose() {
@@ -164,13 +165,15 @@ class _ChatScreenState extends State<ChatScreen> {
               child: Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: TextField(
+                  focusNode: focusNode,
+                  autofocus: true,
                   controller: textController,
                   textCapitalization: TextCapitalization.sentences,
                   decoration: InputDecoration.collapsed(
                     hintText: 'Send a message...',
                   ),
                   textInputAction: TextInputAction.send,
-                  onSubmitted: (value) => _sendMessage(uid),
+                  onSubmitted: (value) => _sendMessage(context, uid),
                   autocorrect: false,
                 ),
               ),
@@ -179,7 +182,7 @@ class _ChatScreenState extends State<ChatScreen> {
               icon: Icon(Icons.send),
               iconSize: 25.0,
               color: Theme.of(context).primaryColor,
-              onPressed: () => _sendMessage(uid),
+              onPressed: () => _sendMessage(context, uid),
             ),
           ],
         ),
@@ -187,7 +190,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  void _sendMessage(String uid) {
+  void _sendMessage(BuildContext context, String uid) {
     final content = textController.text;
     if (content != "") {
       final currentMs = DateTime.now().millisecondsSinceEpoch;
@@ -199,6 +202,7 @@ class _ChatScreenState extends State<ChatScreen> {
           roomID: room.id);
       database.setMessage(message);
       textController.clear();
+      FocusScope.of(context).requestFocus(focusNode);
     }
   }
 
