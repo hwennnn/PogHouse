@@ -8,7 +8,7 @@ class MessageListTile extends StatelessWidget {
   final bool isMe;
 
   String readTimestamp(int timestamp) {
-    var format = DateFormat('HH:mm a');
+    var format = DateFormat('HH:mm');
     var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
 
     return format.format(date);
@@ -19,15 +19,16 @@ class MessageListTile extends StatelessWidget {
     return Container(
       margin: isMe
           ? EdgeInsets.only(
-              top: 8.0,
-              bottom: 8.0,
+              top: 12.0,
+              bottom: 12.0,
               left: 80.0,
             )
           : EdgeInsets.only(
-              top: 8.0,
-              bottom: 8.0,
+              right: 80,
+              top: 12.0,
+              bottom: 12.0,
             ),
-      padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15.0),
+      padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
       width: MediaQuery.of(context).size.width * 0.75,
       decoration: BoxDecoration(
         color: isMe ? Color(0xffEDEEF7) : Color(0xffF7F7F8),
@@ -48,7 +49,7 @@ class MessageListTile extends StatelessWidget {
             readTimestamp(message.sentAt),
             style: TextStyle(
               color: Colors.blueGrey,
-              fontSize: 16.0,
+              fontSize: 15.0,
               fontWeight: FontWeight.w600,
             ),
           ),

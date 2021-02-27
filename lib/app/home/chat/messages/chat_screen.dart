@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:poghouse/app/home/chat/messages/message_list_items_builder.dart';
+import 'package:poghouse/app/home/chat/messages/message_list_tile.dart';
 import 'package:poghouse/app/model/message.dart';
 import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
@@ -48,6 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget appBar() {
     return AppBar(
+      elevation: 0.0,
       automaticallyImplyLeading: false, // Don't show the leading button
       title: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -93,6 +94,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 child: Column(
                   children: <Widget>[
+                    SizedBox(height: 30),
                     Expanded(
                       child: _buildMessage(context),
                     ),
@@ -122,12 +124,14 @@ class _ChatScreenState extends State<ChatScreen> {
           );
         } else if (snapshot.connectionState == ConnectionState.active) {
           List<Message> messages = snapshot.data;
+          final int n = messages.length;
           messages.sort((a, b) => a.sentAt.compareTo(b.sentAt));
           return ListView.builder(
+            reverse: true,
             padding: EdgeInsets.only(top: 15.0),
             itemCount: messages.length,
             itemBuilder: (BuildContext context, int index) {
-              final Message message = messages[index];
+              final Message message = messages[n - index - 1];
               final bool isMe = message.sender == uid;
               return MessageListTile(
                 message: message,
@@ -145,20 +149,29 @@ class _ChatScreenState extends State<ChatScreen> {
     final auth = Provider.of<AuthBase>(context, listen: false);
     final uid = auth.currentUser.uid;
 
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.0),
-      height: 70.0,
-      color: Colors.white,
-      child: Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+    return Padding(
+      padding: EdgeInsets.only(left: 30, right: 30, bottom: 30),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color(0xffF7F7F8),
+          borderRadius: BorderRadius.circular(30),
+        ),
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        height: 60.0,
         child: Row(
           children: <Widget>[
             Expanded(
-              child: TextField(
-                controller: textController,
-                textCapitalization: TextCapitalization.sentences,
-                decoration: InputDecoration.collapsed(
-                  hintText: 'Send a message...',
+              child: Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: TextField(
+                  controller: textController,
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: InputDecoration.collapsed(
+                    hintText: 'Send a message...',
+                  ),
+                  textInputAction: TextInputAction.send,
+                  onSubmitted: (value) => _sendMessage(uid),
+                  autocorrect: false,
                 ),
               ),
             ),
@@ -175,15 +188,18 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _sendMessage(String uid) {
-    final currentMs = DateTime.now().millisecondsSinceEpoch;
-    final message = Message(
-        id: documentId,
-        content: textController.text,
-        sender: uid,
-        sentAt: currentMs,
-        roomID: room.id);
-    database.setMessage(message);
-    textController.clear();
+    final content = textController.text;
+    if (content != "") {
+      final currentMs = DateTime.now().millisecondsSinceEpoch;
+      final message = Message(
+          id: documentId,
+          content: content,
+          sender: uid,
+          sentAt: currentMs,
+          roomID: room.id);
+      database.setMessage(message);
+      textController.clear();
+    }
   }
 
   @override
