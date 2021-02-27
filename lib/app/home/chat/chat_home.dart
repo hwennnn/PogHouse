@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/favorite_contacts.dart';
 import 'package:poghouse/app/home/chat/recent_chats/recent_chats.dart';

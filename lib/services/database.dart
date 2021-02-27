@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:poghouse/app/model/message.dart';
 import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/app/model/rooms.dart';
 import 'package:uuid/uuid.dart';
@@ -13,10 +14,12 @@ abstract class Database {
   Future<void> setRoom(Room room);
   Future<void> deleteRoom(Room room);
   Future<void> addRoomToPeople(Room room);
+  Future<void> setMessage(Message message);
   Stream<DocumentSnapshot> roomStream(String id);
   Stream<List<Room>> roomsStream(String uid);
   Stream<List<People>> peopleStream();
   Stream<List<People>> favoriteStream(String uid);
+  Stream<List<Message>> messagesStream(String roomID);
 }
 
 String get documentId => Uuid().v4();
@@ -72,6 +75,14 @@ class FirestoreDatabase implements Database {
     }
   }
 
+  Future<void> setMessage(Message message) async {
+    final user =
+        FirebaseFirestore.instance.collection('rooms').doc(message.roomID);
+    await user.collection('messages').doc(message.id).set(
+          message.toMap(),
+        );
+  }
+
   Stream<DocumentSnapshot> roomStream(String id) =>
       _service.roomCollectionStream(
         roomID: id,
@@ -92,5 +103,11 @@ class FirestoreDatabase implements Database {
       _service.favoriteCollectionStream(
         uid: uid,
         builder: (data) => People.fromMap(data),
+      );
+
+  Stream<List<Message>> messagesStream(String roomID) =>
+      _service.messagesCollectionStream(
+        roomID: roomID,
+        builder: (data) => Message.fromMap(data),
       );
 }

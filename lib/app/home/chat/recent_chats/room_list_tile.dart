@@ -25,6 +25,7 @@ class RoomListTile extends StatelessWidget {
       onTap: () => ChatScreen.show(
         context,
         room: room,
+        database: Provider.of<Database>(context, listen: false),
       ),
     );
   }
