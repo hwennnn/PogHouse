@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/messages/chat_screen.dart';
 import 'package:poghouse/app/model/rooms.dart';
@@ -13,14 +14,80 @@ class RoomListTile extends StatelessWidget {
   final String roomID;
   final VoidCallback onTap;
 
+  String readTimestamp(int timestamp) {
+    var format = DateFormat('HH:mm');
+    var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+
+    return format.format(date);
+  }
+
   Widget roomListTile(BuildContext context, Room room) {
     return InkWell(
-      child: ListTile(
-        leading: CustomCircleAvatar(
-          photoUrl: room.photoUrl,
-          width: 40,
+      child: Container(
+        margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 20.0),
+        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(20.0),
+            bottomRight: Radius.circular(20.0),
+          ),
         ),
-        title: Text(room.name),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                CustomCircleAvatar(photoUrl: room.photoUrl, width: 40),
+                SizedBox(width: 20.0),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      room.name,
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 5.0),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.45,
+                      child: Text(
+                        room.recentMessage != null
+                            ? room.recentMessage.content
+                            : "",
+                        style: TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Text(
+                  room.recentMessage != null
+                      ? readTimestamp(room.recentMessage.sentAt)
+                      : "",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 15.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(''),
+              ],
+            ),
+          ],
+        ),
       ),
       onTap: () => ChatScreen.show(
         context,

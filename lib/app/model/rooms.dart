@@ -1,4 +1,5 @@
 import 'package:meta/meta.dart';
+import 'package:poghouse/app/model/message.dart';
 
 class Room {
   Room(
@@ -7,13 +8,15 @@ class Room {
       this.photoUrl,
       this.createdAt,
       this.owner,
-      this.members});
+      this.members,
+      this.recentMessage});
   final String id;
   final String name;
   final String photoUrl;
   final int createdAt;
   final String owner;
   final List<String> members;
+  final Message recentMessage;
 
   factory Room.fromMap(Map<String, dynamic> data) {
     if (data == null) {
@@ -27,6 +30,7 @@ class Room {
     final String owner = data['owner'];
     final List<String> members =
         (data['members'] as List)?.map((item) => item as String)?.toList();
+    final Message recentMessage = Message.fromMap(data['recentMessage']);
 
     return Room(
       id: id,
@@ -35,6 +39,7 @@ class Room {
       createdAt: createdAt,
       owner: owner,
       members: members,
+      recentMessage: recentMessage,
     );
   }
 

@@ -17,6 +17,7 @@ abstract class Database {
   Future<void> deleteRoom(Room room);
   Future<void> addRoomToPeople(Room room);
   Future<void> setMessage(Message message);
+  Future<void> setRecentMessage(Message message);
   Stream<DocumentSnapshot> roomStream(String id);
   Stream<List<Room>> roomsStream(String uid);
   Stream<List<People>> peopleStream();
@@ -96,11 +97,19 @@ class FirestoreDatabase implements Database {
   }
 
   Future<void> setMessage(Message message) async {
-    final user =
+    final room =
         FirebaseFirestore.instance.collection('rooms').doc(message.roomID);
-    await user.collection('messages').doc(message.id).set(
+    await room.collection('messages').doc(message.id).set(
           message.toMap(),
         );
+  }
+
+  Future<void> setRecentMessage(Message message) async {
+    final room =
+        FirebaseFirestore.instance.collection('rooms').doc(message.roomID);
+    await room.update({
+      'recentMessage': message.toMap(),
+    });
   }
 
   Stream<DocumentSnapshot> roomStream(String id) =>
