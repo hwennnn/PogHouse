@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/messages/chat_screen.dart';
+import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
 import 'package:poghouse/common_widgets/loading.dart';
@@ -8,12 +9,17 @@ import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/database.dart';
 import 'package:provider/provider.dart';
 
-class RoomListTile extends StatelessWidget {
+class RoomListTile extends StatefulWidget {
   const RoomListTile({Key key, @required this.roomID, this.onTap})
       : super(key: key);
   final String roomID;
   final VoidCallback onTap;
 
+  @override
+  _RoomListTileState createState() => _RoomListTileState();
+}
+
+class _RoomListTileState extends State<RoomListTile> {
   String readTimestamp(int timestamp) {
     var format = DateFormat('HH:mm');
     var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
@@ -21,7 +27,67 @@ class RoomListTile extends StatelessWidget {
     return format.format(date);
   }
 
-  Widget roomListTile(BuildContext context, Room room) {
+  Future<Map<String, People>> _constructMembersMap(
+      Room room, Database database) async {
+    List<People> members = await database.retrieveRoomMembers(room);
+    Map<String, People> map = new Map();
+    for (People people in members) {
+      map[people.id] = people;
+    }
+    return map;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final database = Provider.of<Database>(context, listen: false);
+    return StreamBuilder(
+      stream: database.roomStream(widget.roomID),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Loading();
+        } else {
+          if (snapshot.hasError) {
+            showExceptionAlertDialog(
+              context,
+              title: "Error",
+              exception: snapshot.error,
+            );
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            Map<String, dynamic> result =
+                new Map<String, dynamic>.from(snapshot.data.data());
+            Room room = Room.fromMap(result);
+            return _buildContext(context, room, database);
+          }
+        }
+      },
+    );
+  }
+
+  Widget _buildContext(BuildContext context, Room room, Database database) {
+    return FutureBuilder<Map<String, People>>(
+        future: _constructMembersMap(room, database),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Loading();
+          } else {
+            if (snapshot.hasError) {
+              showExceptionAlertDialog(
+                context,
+                title: "Error",
+                exception: snapshot.error,
+              );
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              Map<String, dynamic> members = snapshot.data;
+              return roomListTile(room, members, database);
+            }
+          }
+        });
+  }
+
+  Widget roomListTile(
+      Room room, Map<String, People> members, Database database) {
     return InkWell(
       child: Container(
         margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 20.0),
@@ -88,31 +154,9 @@ class RoomListTile extends StatelessWidget {
       onTap: () => ChatScreen.show(
         context,
         room: room,
-        database: Provider.of<Database>(context, listen: false),
+        members: members,
+        database: database,
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final database = Provider.of<Database>(context, listen: false);
-    return StreamBuilder(
-      stream: database.roomStream(roomID),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          showExceptionAlertDialog(
-            context,
-            title: "Error",
-            exception: snapshot.error,
-          );
-        } else if (snapshot.connectionState == ConnectionState.active) {
-          Map<String, dynamic> result =
-              new Map<String, dynamic>.from(snapshot.data.data());
-          Room room = Room.fromMap(result);
-          return roomListTile(context, room);
-        }
-        return Loading();
-      },
     );
   }
 }

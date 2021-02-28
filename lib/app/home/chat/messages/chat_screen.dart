@@ -21,8 +21,7 @@ class ChatScreen extends StatefulWidget {
   final Database database;
 
   static Future<void> show(BuildContext context,
-      {Room room, Database database}) async {
-    Map<String, People> members = await constructMembersMap(room, database);
+      {Room room, Database database, Map<String, People> members}) async {
     await Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
         builder: (context) => ChatScreen(
@@ -32,16 +31,6 @@ class ChatScreen extends StatefulWidget {
         ),
       ),
     );
-  }
-
-  static Future<Map<String, People>> constructMembersMap(
-      Room room, Database database) async {
-    List<People> members = await database.retrieveRoomMembers(room);
-    Map<String, People> map = new Map();
-    for (People people in members) {
-      map[people.id] = people;
-    }
-    return map;
   }
 
   @override
