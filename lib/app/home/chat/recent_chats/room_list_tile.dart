@@ -54,9 +54,7 @@ class RoomListTile extends StatelessWidget {
                     Container(
                       width: MediaQuery.of(context).size.width * 0.45,
                       child: Text(
-                        room.recentMessage != null
-                            ? room.recentMessage.content
-                            : "",
+                        room.recentMessage.content,
                         style: TextStyle(
                           color: Colors.blueGrey,
                           fontSize: 15.0,
@@ -74,9 +72,7 @@ class RoomListTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 Text(
-                  room.recentMessage != null
-                      ? readTimestamp(room.recentMessage.sentAt)
-                      : "",
+                  readTimestamp(room.recentMessage.sentAt),
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 15.0,
