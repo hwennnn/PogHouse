@@ -55,7 +55,9 @@ class MessageListTile extends StatelessWidget {
                     )
                   : Container(),
               BubbleMessage(
-                painter: BubblePainter(isIncoming: !isMe),
+                painter: BubblePainter(
+                  isIncoming: !isMe,
+                ),
                 child: Container(
                   constraints: BoxConstraints(
                     maxWidth: 250.0,
@@ -66,9 +68,9 @@ class MessageListTile extends StatelessWidget {
                   child: Text(
                     message.content,
                     style: TextStyle(
-                      color: Color(0xff1B1B1B),
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w600,
+                      color: Color(0xff675C7E),
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),

@@ -10,7 +10,7 @@ class BubblePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final Paint paint = Paint()
-      ..color = Color(0xffF1F1F1)
+      ..color = (!isIncoming) ? Color(0xffEDEEF7) : Color(0xffEEEEF0)
       ..style = PaintingStyle.fill;
     final Path bubble = Path();
     final width = size.width;
