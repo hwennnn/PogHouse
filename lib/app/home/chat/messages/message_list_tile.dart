@@ -6,10 +6,18 @@ import 'package:poghouse/common_widgets/bubble.dart';
 import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
 
 class MessageListTile extends StatelessWidget {
-  const MessageListTile({Key key, this.message, this.isMe, this.sender})
-      : super(key: key);
+  const MessageListTile({
+    Key key,
+    this.message,
+    this.isMe,
+    this.isHideNickname,
+    this.isHideAvatar,
+    this.sender,
+  }) : super(key: key);
   final Message message;
   final bool isMe;
+  final bool isHideNickname;
+  final bool isHideAvatar;
   final People sender;
 
   String readTimestamp(int timestamp) {
@@ -28,21 +36,21 @@ class MessageListTile extends StatelessWidget {
             (isMe) ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
-          (!isMe)
-              ? Padding(
-                  padding: EdgeInsets.only(right: 10),
-                  child: Column(
-                    children: <Widget>[
-                      CustomCircleAvatar(photoUrl: sender.photoUrl, width: 30)
-                    ],
-                  ),
-                )
-              : Container(),
+          Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: Column(
+              children: <Widget>[
+                (!isMe && !isHideAvatar)
+                    ? CustomCircleAvatar(photoUrl: sender.photoUrl, width: 30)
+                    : SizedBox(width: 30),
+              ],
+            ),
+          ),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              (!isMe)
+              (!isMe && !isHideNickname)
                   ? Padding(
                       padding: EdgeInsets.only(left: 5, bottom: 5),
                       child: Text(

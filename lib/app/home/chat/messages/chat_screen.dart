@@ -150,14 +150,21 @@ class _ChatScreenState extends State<ChatScreen> {
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             reverse: true,
             padding: EdgeInsets.only(top: 15.0),
-            itemCount: messages.length,
+            itemCount: n,
             itemBuilder: (BuildContext context, int index) {
               final Message message = messages[n - index - 1];
               final bool isMe = message.sender == uid;
+              final bool isHideNickname = index + 1 < n &&
+                  messages[n - index - 2].sender == message.sender;
+              final bool isHideAvatar = index != 0 &&
+                  index + 1 < n &&
+                  messages[n - index].sender == message.sender;
               return MessageListTile(
                 message: message,
                 isMe: isMe,
                 sender: members[message.sender],
+                isHideNickname: isHideNickname,
+                isHideAvatar: isHideAvatar,
               );
             },
           );
