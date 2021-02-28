@@ -22,7 +22,7 @@ class MessageListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
+      padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
       child: Row(
         mainAxisAlignment:
             (isMe) ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -55,7 +55,7 @@ class MessageListTile extends StatelessWidget {
                     )
                   : Container(),
               BubbleMessage(
-                painter: BubblePainter(),
+                painter: BubblePainter(isIncoming: !isMe),
                 child: Container(
                   constraints: BoxConstraints(
                     maxWidth: 250.0,
