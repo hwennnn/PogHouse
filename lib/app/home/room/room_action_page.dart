@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/room/room_people_list_tile.dart';
 import 'package:poghouse/app/home/people/people_list_items_builder.dart';
+import 'package:poghouse/app/model/message.dart';
 import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/loading.dart';
@@ -78,6 +79,15 @@ class _RoomActionPageState extends State<RoomActionPage> {
 
         final id = widget.room?.id ?? documentId;
         final currentMs = DateTime.now().millisecondsSinceEpoch;
+
+        final message = Message(
+          roomID: id,
+          id: documentId,
+          content: '${auth.currentUser.displayName} has created the room',
+          sender: auth.currentUser.uid,
+          sentAt: currentMs,
+        );
+
         final room = Room(
           id: id,
           name: _name,
@@ -86,6 +96,7 @@ class _RoomActionPageState extends State<RoomActionPage> {
           owner: auth.currentUser.uid,
           members: _members,
           createdAt: currentMs,
+          recentMessage: message,
         );
 
         await database.setRoom(room);

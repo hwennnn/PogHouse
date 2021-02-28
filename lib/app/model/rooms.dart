@@ -51,6 +51,7 @@ class Room {
       'createdAt': createdAt,
       'owner': owner,
       'members': members,
+      'recentMessage': recentMessage.toMap(),
     };
   }
 }
