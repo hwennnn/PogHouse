@@ -96,31 +96,34 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget _buildContents(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
-      body: Container(
-        color: Theme.of(context).primaryColor,
-        child: Column(
-          children: <Widget>[
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).accentColor,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30.0),
-                    topRight: Radius.circular(30.0),
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Container(
+          color: Theme.of(context).primaryColor,
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).accentColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30.0),
+                      topRight: Radius.circular(30.0),
+                    ),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(height: 30),
+                      Expanded(
+                        child: _buildMessage(context),
+                      ),
+                      _buildMessageComposer(),
+                    ],
                   ),
                 ),
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(height: 30),
-                    Expanded(
-                      child: _buildMessage(context),
-                    ),
-                    _buildMessageComposer(),
-                  ],
-                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -144,6 +147,7 @@ class _ChatScreenState extends State<ChatScreen> {
           final int n = messages.length;
           messages.sort((a, b) => a.sentAt.compareTo(b.sentAt));
           return ListView.builder(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             reverse: true,
             padding: EdgeInsets.only(top: 15.0),
             itemCount: messages.length,
@@ -168,7 +172,7 @@ class _ChatScreenState extends State<ChatScreen> {
     final uid = auth.currentUser.uid;
 
     return Padding(
-      padding: EdgeInsets.only(left: 30, right: 30, bottom: 30),
+      padding: EdgeInsets.only(top: 10, left: 30, right: 30, bottom: 30),
       child: Container(
         decoration: BoxDecoration(
           color: Color(0xffF7F7F8),
