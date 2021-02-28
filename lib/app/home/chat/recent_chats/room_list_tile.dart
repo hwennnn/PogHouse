@@ -6,6 +6,7 @@ import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
 import 'package:poghouse/common_widgets/loading.dart';
 import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
+import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -80,14 +81,22 @@ class _RoomListTileState extends State<RoomListTile> {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {
               Map<String, dynamic> members = snapshot.data;
-              return roomListTile(room, members, database);
+              String senderName = _formatSenderName(context, members, room);
+              return roomListTile(room, senderName, members, database);
             }
           }
         });
   }
 
-  Widget roomListTile(
-      Room room, Map<String, People> members, Database database) {
+  String _formatSenderName(
+      BuildContext context, Map<String, People> members, Room room) {
+    final auth = Provider.of<AuthBase>(context, listen: false);
+    final People sender = members[room.recentMessage.sender];
+    return sender.id == auth.currentUser.uid ? "You" : sender.nickname;
+  }
+
+  Widget roomListTile(Room room, String senderName, Map<String, People> members,
+      Database database) {
     return InkWell(
       child: Container(
         margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 20.0),
@@ -120,7 +129,7 @@ class _RoomListTileState extends State<RoomListTile> {
                     Container(
                       width: MediaQuery.of(context).size.width * 0.45,
                       child: Text(
-                        room.recentMessage.content,
+                        "$senderName: ${room.recentMessage.content}",
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 15.0,
