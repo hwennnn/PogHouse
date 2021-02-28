@@ -42,11 +42,14 @@ class _MessageListTileState extends State<MessageListTile> {
         children: [
           Visibility(
             visible: _showTimeStamp,
-            child: Text(
-              readTimestamp(widget.message.sentAt),
-              style: TextStyle(
-                color: Color(0xff675C7E),
-                fontSize: 12.0,
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 8),
+              child: Text(
+                readTimestamp(widget.message.sentAt),
+                style: TextStyle(
+                  color: Color(0xff675C7E),
+                  fontSize: 12.0,
+                ),
               ),
             ),
           ),
