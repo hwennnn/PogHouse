@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/model/message.dart';
 import 'package:poghouse/app/model/people.dart';
+import 'package:poghouse/common_widgets/bubble.dart';
 import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
 
 class MessageListTile extends StatelessWidget {
@@ -21,73 +22,59 @@ class MessageListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: isMe
-          ? EdgeInsets.only(
-              top: 12.0,
-              bottom: 12.0,
-              left: 80.0,
-            )
-          : EdgeInsets.only(
-              right: 80,
-              top: 12.0,
-              bottom: 12.0,
-            ),
       padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
-      width: MediaQuery.of(context).size.width * 0.75,
-      decoration: BoxDecoration(
-        color: isMe ? Color(0xffEDEEF7) : Color(0xffF7F7F8),
-        borderRadius: isMe
-            ? BorderRadius.only(
-                topLeft: Radius.circular(15.0),
-                bottomLeft: Radius.circular(15.0),
-              )
-            : BorderRadius.only(
-                topRight: Radius.circular(15.0),
-                bottomRight: Radius.circular(15.0),
-              ),
-      ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment:
+            (isMe) ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
           (!isMe)
               ? Padding(
-                  padding: EdgeInsets.only(right: 20),
+                  padding: EdgeInsets.only(right: 10),
                   child: Column(
                     children: <Widget>[
-                      CustomCircleAvatar(photoUrl: sender.photoUrl, width: 40)
+                      CustomCircleAvatar(photoUrl: sender.photoUrl, width: 30)
                     ],
                   ),
                 )
               : Container(),
-          Flexible(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                (!isMe)
-                    ? Padding(
-                        padding: EdgeInsets.only(bottom: 10),
-                        child: Text(
-                          sender.nickname,
-                          style: TextStyle(
-                            color: Color(0xff675C7E),
-                            fontSize: 14.0,
-                          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              (!isMe)
+                  ? Padding(
+                      padding: EdgeInsets.only(left: 5, bottom: 5),
+                      child: Text(
+                        sender.nickname,
+                        style: TextStyle(
+                          color: Color(0xff675C7E),
+                          fontSize: 12.0,
                         ),
-                      )
-                    : Container(),
-                Text(
-                  message.content,
-                  style: TextStyle(
-                    color: Color(0xff675C7E),
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w600,
+                      ),
+                    )
+                  : Container(),
+              BubbleMessage(
+                painter: BubblePainter(),
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxWidth: 250.0,
+                    minWidth: 50.0,
+                  ),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 15.0, vertical: 6.0),
+                  child: Text(
+                    message.content,
+                    style: TextStyle(
+                      color: Color(0xff1B1B1B),
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-              ],
-            ),
-          ),
+              )
+            ],
+          ), // (!isMe)],
         ],
       ),
     );
