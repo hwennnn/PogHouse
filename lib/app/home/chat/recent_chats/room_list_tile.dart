@@ -45,9 +45,9 @@ class RoomListTile extends StatelessWidget {
                     Text(
                       room.name,
                       style: TextStyle(
-                        color: Colors.grey,
+                        color: Colors.black,
                         fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     SizedBox(height: 5.0),
@@ -56,7 +56,7 @@ class RoomListTile extends StatelessWidget {
                       child: Text(
                         room.recentMessage.content,
                         style: TextStyle(
-                          color: Colors.blueGrey,
+                          color: Colors.grey,
                           fontSize: 15.0,
                           fontWeight: FontWeight.w600,
                         ),
