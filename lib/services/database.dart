@@ -11,6 +11,11 @@ abstract class Database {
   Future<List<People>> retrieveAllPeople();
   Future<People> retrieveSinglePeople(String uid);
   Future<List<People>> retrieveRoomMembers(Room room);
+  Future<List<Room>> retrieveRooms(List<String> roomIDs);
+  Future<Room> retrieveSingleRoom(String roomID);
+  Future<void> updateLastModified(Room room, int lastModified);
+  Future<void> updateLastModifiedHelper(
+      String uid, Room room, int lastModified);
   Future<void> setFavorite(String uid, People people);
   Future<void> removeFavorite(String uid, People people);
   Future<void> setRoom(Room room);
@@ -65,6 +70,42 @@ class FirestoreDatabase implements Database {
     return result;
   }
 
+  Future<List<Room>> retrieveRooms(List<String> roomIDs) async {
+    List<Room> rooms = [];
+    for (String roomID in roomIDs) {
+      final Room room = await retrieveSingleRoom(roomID);
+      rooms.add(room);
+    }
+
+    return rooms;
+  }
+
+  Future<Room> retrieveSingleRoom(String roomID) async {
+    final snapshot =
+        await FirebaseFirestore.instance.collection('rooms').doc(roomID).get();
+    Room room = Room.fromMap(snapshot.data());
+    return room;
+  }
+
+  Future<void> updateLastModified(Room room, int lastModified) async {
+    List<String> members = [room.owner, ...room.members];
+    for (String uid in members) {
+      await updateLastModifiedHelper(uid, room, lastModified);
+    }
+  }
+
+  Future<void> updateLastModifiedHelper(
+      String uid, Room room, int lastModified) async {
+    final roomRef = FirebaseFirestore.instance
+        .collection('people')
+        .doc(uid)
+        .collection('rooms')
+        .doc(room.id);
+    await roomRef.update({
+      'lastModified': lastModified,
+    });
+  }
+
   Future<void> setFavorite(String uid, People people) async {
     final user = FirebaseFirestore.instance.collection('people').doc(uid);
     await user.collection('favorite').doc(people.id).set(
@@ -92,6 +133,7 @@ class FirestoreDatabase implements Database {
       final user = FirebaseFirestore.instance.collection('people').doc(id);
       await user.collection('rooms').doc(room.id).set({
         'id': room.id,
+        'lastModified': room.lastModified,
       });
     }
   }
