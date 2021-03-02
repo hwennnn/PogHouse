@@ -97,6 +97,7 @@ class _RoomActionPageState extends State<RoomActionPage> {
           members: _members,
           createdAt: currentMs,
           recentMessage: message,
+          lastModified: currentMs,
         );
 
         await database.setRoom(room);

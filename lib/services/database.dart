@@ -108,6 +108,7 @@ class FirestoreDatabase implements Database {
     final room =
         FirebaseFirestore.instance.collection('rooms').doc(message.roomID);
     await room.update({
+      'lastModified': message.sentAt,
       'recentMessage': message.toMap(),
     });
   }

@@ -9,7 +9,8 @@ class Room {
       this.createdAt,
       this.owner,
       this.members,
-      this.recentMessage});
+      this.recentMessage,
+      this.lastModified});
   final String id;
   final String name;
   final String photoUrl;
@@ -17,6 +18,7 @@ class Room {
   final String owner;
   final List<String> members;
   final Message recentMessage;
+  final int lastModified;
 
   factory Room.fromMap(Map<String, dynamic> data) {
     if (data == null) {
@@ -28,6 +30,7 @@ class Room {
     final String photoUrl = data['photoUrl'];
     final int createdAt = data['createdAt'];
     final String owner = data['owner'];
+    final int lastModified = data['lastModified'];
     final List<String> members =
         (data['members'] as List)?.map((item) => item as String)?.toList();
     final Message recentMessage = Message.fromMap(data['recentMessage']);
@@ -40,6 +43,7 @@ class Room {
       owner: owner,
       members: members,
       recentMessage: recentMessage,
+      lastModified: lastModified,
     );
   }
 
@@ -51,6 +55,7 @@ class Room {
       'createdAt': createdAt,
       'owner': owner,
       'members': members,
+      'lastModified': lastModified,
       'recentMessage': recentMessage.toMap(),
     };
   }
