@@ -10,8 +10,8 @@ import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
 import 'package:provider/provider.dart';
 
-class ChatScreen extends StatefulWidget {
-  ChatScreen({
+class MessageScreen extends StatefulWidget {
+  MessageScreen({
     @required this.room,
     @required this.members,
     this.database,
@@ -24,7 +24,7 @@ class ChatScreen extends StatefulWidget {
       {Room room, Database database, Map<String, People> members}) async {
     await Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
-        builder: (context) => ChatScreen(
+        builder: (context) => MessageScreen(
           room: room,
           members: members,
           database: database,
@@ -37,7 +37,7 @@ class ChatScreen extends StatefulWidget {
   _ChatScreenState createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<MessageScreen> {
   Room get room => widget.room;
   Database get database => widget.database;
   Map<String, People> get members => widget.members;

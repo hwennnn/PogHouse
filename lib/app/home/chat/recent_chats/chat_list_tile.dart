@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:poghouse/app/home/chat/messages/chat_screen.dart';
+import 'package:poghouse/app/home/chat/messages/message_screen.dart';
 import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
@@ -160,7 +160,7 @@ class _RoomListTileState extends State<ChatListTile> {
           ],
         ),
       ),
-      onTap: () => ChatScreen.show(
+      onTap: () => MessageScreen.show(
         context,
         room: room,
         members: members,
