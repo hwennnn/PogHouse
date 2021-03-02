@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:poghouse/app/home/chat/recent_chats/room_list_items_builder.dart';
-import 'package:poghouse/app/home/chat/recent_chats/room_list_tile.dart';
+import 'package:poghouse/app/home/chat/recent_chats/chat_list_items_builder.dart';
+import 'package:poghouse/app/home/chat/recent_chats/chat_list_tile.dart';
 
 class RecentChats extends StatelessWidget {
   RecentChats({this.rooms});
@@ -9,9 +9,9 @@ class RecentChats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RoomListItemBuilder(
+    return ChatListItemBuilder(
       rooms: rooms,
-      itemBuilder: (context, roomID) => RoomListTile(roomID: roomID),
+      itemBuilder: (context, roomID) => ChatListTile(roomID: roomID),
     );
   }
 }

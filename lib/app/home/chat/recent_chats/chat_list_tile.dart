@@ -10,8 +10,8 @@ import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
 import 'package:provider/provider.dart';
 
-class RoomListTile extends StatefulWidget {
-  const RoomListTile({Key key, @required this.roomID, this.onTap})
+class ChatListTile extends StatefulWidget {
+  const ChatListTile({Key key, @required this.roomID, this.onTap})
       : super(key: key);
   final String roomID;
   final VoidCallback onTap;
@@ -20,7 +20,7 @@ class RoomListTile extends StatefulWidget {
   _RoomListTileState createState() => _RoomListTileState();
 }
 
-class _RoomListTileState extends State<RoomListTile> {
+class _RoomListTileState extends State<ChatListTile> {
   String readTimestamp(int timestamp) {
     var format = DateFormat('HH:mm');
     var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
@@ -127,7 +127,7 @@ class _RoomListTileState extends State<RoomListTile> {
                     ),
                     SizedBox(height: 5.0),
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.45,
+                      width: MediaQuery.of(context).size.width * 0.5,
                       child: Text(
                         "$senderName: ${room.recentMessage.content}",
                         style: TextStyle(
