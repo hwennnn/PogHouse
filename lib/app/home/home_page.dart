@@ -50,9 +50,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Map<TabItem, WidgetBuilder> get widgetBuilders {
+    final chats = new ChatHome(auth: auth);
+    final people = new PeopleHome(auth: auth);
+
     return {
-      TabItem.chats: (_) => ChatHome(auth: auth),
-      TabItem.people: (_) => PeopleHome(auth: auth),
+      TabItem.chats: (_) => chats,
+      TabItem.people: (_) => people,
     };
   }
 
