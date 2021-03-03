@@ -46,6 +46,7 @@ class _PeoplePageState extends State<PeopleHome> {
           // print("People: $favorite");
 
           return PeopleListItemsBuilder(
+            needFiltered: true,
             people: people,
             itemBuilder: (context, people) => PeopleListTile(
               people: people,

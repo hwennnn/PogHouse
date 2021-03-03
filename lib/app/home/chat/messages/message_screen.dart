@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/messages/message_list_tile.dart';
+import 'package:poghouse/app/home/chat/messages/room_details_page.dart';
 import 'package:poghouse/app/model/message.dart';
 import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/app/model/rooms.dart';
@@ -72,18 +73,26 @@ class _ChatScreenState extends State<MessageScreen> {
             icon: Icon(Icons.arrow_back_ios),
             onPressed: () => Navigator.pop(context),
           ),
-          CustomCircleAvatar(
-            photoUrl: room.photoUrl,
-            width: 40,
-            backgroundColor: Theme.of(context).primaryColor,
-          ),
-          SizedBox(width: 10),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(room.name),
-            ],
+          InkWell(
+            child: Row(
+              children: [
+                CustomCircleAvatar(
+                  photoUrl: room.photoUrl,
+                  width: 40,
+                  backgroundColor: Theme.of(context).primaryColor,
+                ),
+                SizedBox(width: 10),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(room.name),
+                  ],
+                ),
+              ],
+            ),
+            onTap: () =>
+                RoomDetailsPage.show(context, room: room, members: members),
           ),
         ],
       ),

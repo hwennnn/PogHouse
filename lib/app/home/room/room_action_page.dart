@@ -194,6 +194,7 @@ class _RoomActionPageState extends State<RoomActionPage> {
   Widget _buildPeopleList() {
     return Expanded(
       child: PeopleListItemsBuilder(
+        needFiltered: true,
         people: people,
         itemBuilder: (context, people) => RoomPeopleListTile(
           people: people,
