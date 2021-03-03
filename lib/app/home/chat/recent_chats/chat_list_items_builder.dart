@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/empty_content.dart';
+import 'package:poghouse/app/model/rooms.dart';
 
 typedef ItemWidgetBuilder<T> = Widget Function(BuildContext context, T item);
 
@@ -9,7 +10,7 @@ class ChatListItemBuilder extends StatelessWidget {
     @required this.rooms,
     @required this.itemBuilder,
   }) : super(key: key);
-  final List<String> rooms;
+  final List<Room> rooms;
   final ItemWidgetBuilder itemBuilder;
 
   @override
@@ -21,7 +22,7 @@ class ChatListItemBuilder extends StatelessWidget {
     return EmptyContent();
   }
 
-  Widget _buildList(List<String> items) {
+  Widget _buildList(List<Room> items) {
     return ListView.separated(
       itemCount: items.length + 2,
       separatorBuilder: (context, index) => Divider(height: 0.5),

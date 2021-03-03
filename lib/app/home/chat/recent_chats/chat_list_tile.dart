@@ -10,17 +10,12 @@ import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
 import 'package:provider/provider.dart';
 
-class ChatListTile extends StatefulWidget {
-  const ChatListTile({Key key, @required this.roomID, this.onTap})
+class ChatListTile extends StatelessWidget {
+  const ChatListTile({Key key, @required this.room, this.onTap})
       : super(key: key);
-  final String roomID;
+  final Room room;
   final VoidCallback onTap;
 
-  @override
-  _RoomListTileState createState() => _RoomListTileState();
-}
-
-class _RoomListTileState extends State<ChatListTile> {
   String readTimestamp(int timestamp) {
     var format = DateFormat('HH:mm');
     var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
@@ -41,31 +36,6 @@ class _RoomListTileState extends State<ChatListTile> {
   @override
   Widget build(BuildContext context) {
     final database = Provider.of<Database>(context, listen: false);
-    return StreamBuilder(
-      stream: database.roomStream(widget.roomID),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Loading();
-        } else {
-          if (snapshot.hasError) {
-            showExceptionAlertDialog(
-              context,
-              title: "Error",
-              exception: snapshot.error,
-            );
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            Map<String, dynamic> result =
-                new Map<String, dynamic>.from(snapshot.data.data());
-            Room room = Room.fromMap(result);
-            return _buildContext(context, room, database);
-          }
-        }
-      },
-    );
-  }
-
-  Widget _buildContext(BuildContext context, Room room, Database database) {
     return FutureBuilder<Map<String, People>>(
         future: _constructMembersMap(room, database),
         builder: (context, snapshot) {
@@ -82,7 +52,7 @@ class _RoomListTileState extends State<ChatListTile> {
             } else {
               Map<String, dynamic> members = snapshot.data;
               String senderName = _formatSenderName(context, members, room);
-              return roomListTile(room, senderName, members, database);
+              return roomListTile(room, senderName, members, database, context);
             }
           }
         });
@@ -96,7 +66,7 @@ class _RoomListTileState extends State<ChatListTile> {
   }
 
   Widget roomListTile(Room room, String senderName, Map<String, People> members,
-      Database database) {
+      Database database, BuildContext context) {
     return InkWell(
       child: Container(
         margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 20.0),

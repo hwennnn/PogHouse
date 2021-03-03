@@ -65,11 +65,10 @@ class _ChatHomeState extends State<ChatHome> {
           );
         } else if (snapshot.connectionState == ConnectionState.active) {
           List<Room> rooms = snapshot.data;
-          rooms.sort((b, a) => a.lastModified.compareTo(b.lastModified));
           List<String> roomIDs = rooms.map((e) => e.id).toList();
           return Expanded(
             child: RecentChats(
-              rooms: roomIDs,
+              roomIDs: roomIDs,
             ),
           );
         }

@@ -25,6 +25,7 @@ abstract class Database {
   Future<void> setRecentMessage(Message message);
   Stream<DocumentSnapshot> roomStream(String id);
   Stream<List<Room>> roomsStream(String uid);
+  Stream<List<Room>> roomsDetailsStream(List<String> roomIDs);
   Stream<List<People>> peopleStream();
   Stream<List<People>> favoriteStream(String uid);
   Stream<List<Message>> messagesStream(String roomID);
@@ -61,13 +62,13 @@ class FirestoreDatabase implements Database {
 
   Future<List<People>> retrieveRoomMembers(Room room) async {
     List<String> members = [room.owner, ...room.members];
-    List<People> result = [];
-    for (String uid in members) {
-      final People people = await retrieveSinglePeople(uid);
-      result.add(people);
-    }
-
-    return result;
+    final snapshots = await FirebaseFirestore.instance
+        .collection('people')
+        .where("id", whereIn: members)
+        .get();
+    List<People> people =
+        snapshots.docs.map((doc) => People.fromMap(doc.data())).toList();
+    return people;
   }
 
   Future<List<Room>> retrieveRooms(List<String> roomIDs) async {
@@ -163,6 +164,12 @@ class FirestoreDatabase implements Database {
 
   Stream<List<Room>> roomsStream(String uid) => _service.roomsCollectionStream(
         uid: uid,
+        builder: (data) => Room.fromMap(data),
+      );
+
+  Stream<List<Room>> roomsDetailsStream(List<String> roomIDs) =>
+      _service.roomsDetailsCollectionStream(
+        roomIDs: roomIDs,
         builder: (data) => Room.fromMap(data),
       );
 

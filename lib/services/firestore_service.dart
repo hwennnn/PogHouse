@@ -73,6 +73,21 @@ class FirestoreService {
         .toList());
   }
 
+  Stream<List<T>> roomsDetailsCollectionStream<T>({
+    @required List<String> roomIDs,
+    @required T Function(Map<String, dynamic> data) builder,
+  }) {
+    final reference = FirebaseFirestore.instance
+        .collection('rooms')
+        .where("id", whereIn: roomIDs);
+    final snapshots = reference.snapshots();
+    return snapshots.map((snapshot) => snapshot.docs
+        .map(
+          (snapshot) => builder(snapshot.data()),
+        )
+        .toList());
+  }
+
   Stream<List<T>> messagesCollectionStream<T>({
     @required String roomID,
     @required T Function(Map<String, dynamic> data) builder,
