@@ -218,7 +218,6 @@ class _ChatScreenState extends State<MessageScreen> {
           roomID: room.id);
       database.setMessage(message);
       database.setRecentMessage(message);
-      database.updateLastModified(room, currentMs);
       textController.clear();
       FocusScope.of(context).requestFocus(focusNode);
     }
