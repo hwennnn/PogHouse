@@ -17,6 +17,7 @@ abstract class Database {
   Future<void> removeFavorite(String uid, People people);
   Future<void> setRoom(Room room);
   Future<void> deleteRoom(Room room);
+  Future<void> updateRoomName(Room room, String roomName);
   Future<void> addRoomToPeople(Room room);
   Future<void> setMessage(Message message);
   Future<void> setRecentMessage(Message message);
@@ -105,6 +106,13 @@ class FirestoreDatabase implements Database {
   Future<void> deleteRoom(Room room) => _service.deleteData(
         path: APIPath.room(room.id),
       );
+
+  Future<void> updateRoomName(Room room, String roomName) async {
+    final roomRef = FirebaseFirestore.instance.collection('rooms').doc(room.id);
+    await roomRef.update({
+      'name': roomName,
+    });
+  }
 
   Future<void> addRoomToPeople(Room room) async {
     List<String> members = [room.owner, ...room.members];

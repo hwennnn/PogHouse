@@ -37,6 +37,10 @@ dependencies:
   uuid: ^2.2.2
   rxdart: ^0.25.0
   cached_network_image: ^2.5.0
+  image_picker: ^0.6.7+11
+  firebase_storage: ^4.0.1
+  adaptive_action_sheet: ^1.1.0
+  flutter_dialogs: ^1.1.0
 
 # Fix "pick account" for google auth on iOS
 dependency_overrides:

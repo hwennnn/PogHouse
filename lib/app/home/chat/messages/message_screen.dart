@@ -91,8 +91,8 @@ class _ChatScreenState extends State<MessageScreen> {
                 ),
               ],
             ),
-            onTap: () =>
-                RoomDetailsPage.show(context, room: room, members: members),
+            onTap: () => RoomDetailsPage.show(context,
+                room: room, members: members, database: database),
           ),
         ],
       ),
