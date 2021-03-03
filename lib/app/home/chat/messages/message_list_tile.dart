@@ -28,8 +28,18 @@ class _MessageListTileState extends State<MessageListTile> {
   bool _showTimeStamp = false;
 
   String readTimestamp(int timestamp) {
-    var format = DateFormat('HH:mm');
-    var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    var format;
+
+    final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+    final now = DateTime.now();
+    final diffInDays = now.difference(date).inDays.abs();
+    if (diffInDays < 1) {
+      format = DateFormat('HH:mm');
+    } else if (diffInDays < 7) {
+      format = DateFormat('EEE, HH:mm');
+    } else {
+      format = DateFormat('d MMM, HH:mm');
+    }
 
     return format.format(date);
   }
