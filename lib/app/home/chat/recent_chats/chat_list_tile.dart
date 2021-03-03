@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/messages/message_screen.dart';
 import 'package:poghouse/app/model/people.dart';
@@ -8,30 +7,15 @@ import 'package:poghouse/common_widgets/loading.dart';
 import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
+import 'package:poghouse/services/utils.dart';
 import 'package:provider/provider.dart';
 
 class ChatListTile extends StatelessWidget {
-  const ChatListTile({Key key, @required this.room, this.onTap})
+  const ChatListTile({Key key, @required this.room, this.onTap, this.utils})
       : super(key: key);
   final Room room;
   final VoidCallback onTap;
-
-  String readTimestamp(int timestamp) {
-    var format;
-
-    final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
-    final now = DateTime.now();
-    final diffInDays = now.difference(date).inDays.abs();
-    if (diffInDays < 1) {
-      format = DateFormat('HH:mm');
-    } else if (diffInDays < 7) {
-      format = DateFormat('EEE, HH:mm');
-    } else {
-      format = DateFormat('d MMM, HH:mm');
-    }
-
-    return format.format(date);
-  }
+  final Utils utils;
 
   Future<Map<String, People>> _constructMembersMap(
       Room room, Database database) async {
@@ -127,7 +111,7 @@ class ChatListTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 Text(
-                  readTimestamp(room.recentMessage.sentAt),
+                  utils.readTimestamp(room.recentMessage.sentAt),
                   style: TextStyle(
                     color: Colors.grey,
                     fontSize: 15.0,
@@ -145,6 +129,7 @@ class ChatListTile extends StatelessWidget {
         room: room,
         members: members,
         database: database,
+        utils: utils,
       ),
     );
   }

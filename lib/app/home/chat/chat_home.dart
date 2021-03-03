@@ -7,6 +7,7 @@ import 'package:poghouse/common_widgets/loading.dart';
 import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
+import 'package:poghouse/services/utils.dart';
 import 'package:provider/provider.dart';
 
 class ChatHome extends StatefulWidget {
@@ -23,7 +24,10 @@ class _ChatHomeState extends State<ChatHome> {
   @override
   Widget build(BuildContext context) {
     // print("Build Chat");
-    return _buildContents(context);
+    return Provider<Utils>(
+      create: (_) => Utils(),
+      child: _buildContents(context),
+    );
   }
 
   Widget favoriteContacts() {

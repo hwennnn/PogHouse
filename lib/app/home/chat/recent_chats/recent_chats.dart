@@ -6,6 +6,7 @@ import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/loading.dart';
 import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/database.dart';
+import 'package:poghouse/services/utils.dart';
 import 'package:provider/provider.dart';
 
 class RecentChats extends StatelessWidget {
@@ -15,6 +16,8 @@ class RecentChats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final database = Provider.of<Database>(context, listen: false);
+    final Utils utils = Provider.of<Utils>(context, listen: false);
+
     return StreamBuilder(
         stream: database.roomsDetailsStream(roomIDs),
         builder: (context, snapshot) {
@@ -33,7 +36,10 @@ class RecentChats extends StatelessWidget {
               rooms.sort((b, a) => a.lastModified.compareTo(b.lastModified));
               return ChatListItemBuilder(
                 rooms: rooms,
-                itemBuilder: (context, room) => ChatListTile(room: room),
+                itemBuilder: (context, room) => ChatListTile(
+                  room: room,
+                  utils: utils,
+                ),
               );
             }
           }

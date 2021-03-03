@@ -8,6 +8,7 @@ import 'package:poghouse/common_widgets/loading.dart';
 import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
+import 'package:poghouse/services/utils.dart';
 import 'package:provider/provider.dart';
 
 class MessageScreen extends StatefulWidget {
@@ -15,19 +16,25 @@ class MessageScreen extends StatefulWidget {
     @required this.room,
     @required this.members,
     this.database,
+    this.utils,
   });
   final Room room;
   final Map<String, People> members;
   final Database database;
+  final Utils utils;
 
   static Future<void> show(BuildContext context,
-      {Room room, Database database, Map<String, People> members}) async {
+      {Room room,
+      Database database,
+      Map<String, People> members,
+      Utils utils}) async {
     await Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
         builder: (context) => MessageScreen(
           room: room,
           members: members,
           database: database,
+          utils: utils,
         ),
       ),
     );
@@ -40,6 +47,7 @@ class MessageScreen extends StatefulWidget {
 class _ChatScreenState extends State<MessageScreen> {
   Room get room => widget.room;
   Database get database => widget.database;
+  Utils get utils => widget.utils;
   Map<String, People> get members => widget.members;
   final textController = TextEditingController();
   final focusNode = FocusNode();
@@ -154,6 +162,7 @@ class _ChatScreenState extends State<MessageScreen> {
                 sender: members[message.sender],
                 isHideNickname: isHideNickname,
                 isHideAvatar: isHideAvatar,
+                utils: utils,
               );
             },
           );

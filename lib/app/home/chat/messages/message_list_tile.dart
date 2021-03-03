@@ -1,9 +1,9 @@
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/model/message.dart';
 import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/common_widgets/bubble.dart';
 import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
+import 'package:poghouse/services/utils.dart';
 
 class MessageListTile extends StatefulWidget {
   const MessageListTile({
@@ -13,12 +13,14 @@ class MessageListTile extends StatefulWidget {
     this.isHideNickname,
     this.isHideAvatar,
     this.sender,
+    this.utils,
   }) : super(key: key);
   final Message message;
   final bool isMe;
   final bool isHideNickname;
   final bool isHideAvatar;
   final People sender;
+  final Utils utils;
 
   @override
   _MessageListTileState createState() => _MessageListTileState();
@@ -26,23 +28,7 @@ class MessageListTile extends StatefulWidget {
 
 class _MessageListTileState extends State<MessageListTile> {
   bool _showTimeStamp = false;
-
-  String readTimestamp(int timestamp) {
-    var format;
-
-    final date = DateTime.fromMillisecondsSinceEpoch(timestamp);
-    final now = DateTime.now();
-    final diffInDays = now.difference(date).inDays.abs();
-    if (diffInDays < 1) {
-      format = DateFormat('HH:mm');
-    } else if (diffInDays < 7) {
-      format = DateFormat('EEE, HH:mm');
-    } else {
-      format = DateFormat('d MMM, HH:mm');
-    }
-
-    return format.format(date);
-  }
+  Utils get utils => widget.utils;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +41,7 @@ class _MessageListTileState extends State<MessageListTile> {
             child: Padding(
               padding: EdgeInsets.only(bottom: 8),
               child: Text(
-                readTimestamp(widget.message.sentAt),
+                utils.readTimestamp(widget.message.sentAt),
                 style: TextStyle(
                   color: Color(0xff675C7E),
                   fontSize: 12.0,
