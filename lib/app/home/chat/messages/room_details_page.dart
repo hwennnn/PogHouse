@@ -181,7 +181,7 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
   Future<String> uploadFile(File _image) async {
     StorageReference storageReference = FirebaseStorage.instance
         .ref()
-        .child('rooms/${_image.path.split('/').last}}');
+        .child('rooms/${_image.path.split('/').last}');
     StorageUploadTask uploadTask = storageReference.putFile(_image);
     await uploadTask.onComplete;
 
