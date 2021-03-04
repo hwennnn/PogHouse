@@ -65,36 +65,51 @@ class _ChatScreenState extends State<MessageScreen> {
     return AppBar(
       elevation: 0.0,
       automaticallyImplyLeading: false, // Don't show the leading button
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: () => Navigator.pop(context),
-          ),
-          InkWell(
-            child: Row(
-              children: [
-                CustomCircleAvatar(
-                  photoUrl: room.photoUrl,
-                  width: 40,
-                  backgroundColor: Theme.of(context).primaryColor,
+      title: StreamBuilder(
+        stream: database.roomStream(room.id),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            showExceptionAlertDialog(
+              context,
+              title: "Error",
+              exception: snapshot.error,
+            );
+          } else if (snapshot.connectionState == ConnectionState.active) {
+            Room room = Room.fromMap(snapshot.data.data());
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.arrow_back_ios),
+                  onPressed: () => Navigator.pop(context),
                 ),
-                SizedBox(width: 10),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(room.name),
-                  ],
+                InkWell(
+                  child: Row(
+                    children: [
+                      CustomCircleAvatar(
+                        photoUrl: room.photoUrl,
+                        width: 40,
+                        backgroundColor: Theme.of(context).primaryColor,
+                      ),
+                      SizedBox(width: 10),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(room.name),
+                        ],
+                      ),
+                    ],
+                  ),
+                  onTap: () => RoomDetailsPage.show(context,
+                      room: room, members: members, database: database),
                 ),
               ],
-            ),
-            onTap: () => RoomDetailsPage.show(context,
-                room: room, members: members, database: database),
-          ),
-        ],
+            );
+          }
+          return Container();
+        },
       ),
     );
   }
