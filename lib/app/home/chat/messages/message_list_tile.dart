@@ -49,68 +49,71 @@ class _MessageListTileState extends State<MessageListTile> {
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment:
-                (widget.isMe) ? MainAxisAlignment.end : MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Column(
+          (widget.message.type != null && widget.message.type == 0)
+              ? Center(child: Text(widget.message.content))
+              : Row(
+                  mainAxisAlignment: (widget.isMe)
+                      ? MainAxisAlignment.end
+                      : MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    (!widget.isMe && !widget.isHideAvatar)
-                        ? CustomCircleAvatar(
-                            photoUrl: widget.sender.photoUrl, width: 30)
-                        : SizedBox(width: 30),
-                  ],
-                ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  (!widget.isMe && !widget.isHideNickname)
-                      ? Padding(
-                          padding: EdgeInsets.only(left: 5, bottom: 5),
-                          child: Text(
-                            widget.sender.nickname,
-                            style: TextStyle(
-                              color: Color(0xff675C7E),
-                              fontSize: 12.0,
-                            ),
-                          ),
-                        )
-                      : Container(),
-                  InkWell(
-                    child: BubbleMessage(
-                      painter: BubblePainter(
-                        isIncoming: !widget.isMe,
-                      ),
-                      child: Container(
-                        constraints: BoxConstraints(
-                          maxWidth: 250.0,
-                          minWidth: 50.0,
-                        ),
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 15.0, vertical: 6.0),
-                        child: Text(
-                          widget.message.content,
-                          style: TextStyle(
-                            color: Color(0xff675C7E),
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
+                    Padding(
+                      padding: EdgeInsets.only(right: 10),
+                      child: Column(
+                        children: <Widget>[
+                          (!widget.isMe && !widget.isHideAvatar)
+                              ? CustomCircleAvatar(
+                                  photoUrl: widget.sender.photoUrl, width: 30)
+                              : SizedBox(width: 30),
+                        ],
                       ),
                     ),
-                    onTap: () => setState(() {
-                      _showTimeStamp = !_showTimeStamp;
-                    }),
-                  ),
-                ],
-              ), // (!isMe)],
-            ],
-          ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        (!widget.isMe && !widget.isHideNickname)
+                            ? Padding(
+                                padding: EdgeInsets.only(left: 5, bottom: 5),
+                                child: Text(
+                                  widget.sender.nickname,
+                                  style: TextStyle(
+                                    color: Color(0xff675C7E),
+                                    fontSize: 12.0,
+                                  ),
+                                ),
+                              )
+                            : Container(),
+                        InkWell(
+                          child: BubbleMessage(
+                            painter: BubblePainter(
+                              isIncoming: !widget.isMe,
+                            ),
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxWidth: 250.0,
+                                minWidth: 50.0,
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 15.0, vertical: 6.0),
+                              child: Text(
+                                widget.message.content,
+                                style: TextStyle(
+                                  color: Color(0xff675C7E),
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ),
+                          onTap: () => setState(() {
+                            _showTimeStamp = !_showTimeStamp;
+                          }),
+                        ),
+                      ],
+                    ), // (!isMe)],
+                  ],
+                ),
         ],
       ),
     );

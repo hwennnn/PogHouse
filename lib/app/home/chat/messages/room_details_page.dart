@@ -7,13 +7,16 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:poghouse/app/home/chat/messages/room_details_people_list_tile.dart';
 import 'package:poghouse/app/home/people/people_list_items_builder.dart';
+import 'package:poghouse/app/model/message.dart';
 import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:poghouse/common_widgets/loading.dart';
 import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
+import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
+import 'package:provider/provider.dart';
 
 class RoomDetailsPage extends StatefulWidget {
   RoomDetailsPage({this.room, this.members, this.database});
@@ -74,6 +77,7 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
 
   void _changeChatName(BuildContext context) async {
     final initial = textController.text;
+    final auth = Provider.of<AuthBase>(context, listen: false);
 
     showPlatformDialog(
       context: context,
@@ -124,6 +128,19 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
                 await database.updateRoomName(room, currentName);
               }
               Navigator.pop(context);
+
+              final currentMs = DateTime.now().millisecondsSinceEpoch;
+              final message = Message(
+                roomID: room.id,
+                id: documentId,
+                content:
+                    '${auth.currentUser.displayName} has changed the group name',
+                sender: auth.currentUser.uid,
+                sentAt: currentMs,
+                type: 0,
+              );
+              await database.setMessage(message);
+              await database.setRecentMessage(message);
             },
           ),
         ],
@@ -132,6 +149,7 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
   }
 
   void _changeImage(BuildContext context) async {
+    final auth = Provider.of<AuthBase>(context, listen: false);
     Navigator.pop(context);
     ImagePicker picker = ImagePicker();
     PickedFile pickedFile;
@@ -145,6 +163,18 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
       final photoUrl = await uploadFile(File(pickedFile.path));
       await database.updateRoomPhoto(room, photoUrl);
       EasyLoading.dismiss();
+
+      final currentMs = DateTime.now().millisecondsSinceEpoch;
+      final message = Message(
+        roomID: room.id,
+        id: documentId,
+        content: '${auth.currentUser.displayName} has changed the group photo',
+        sender: auth.currentUser.uid,
+        sentAt: currentMs,
+        type: 0,
+      );
+      await database.setMessage(message);
+      await database.setRecentMessage(message);
     }
   }
 

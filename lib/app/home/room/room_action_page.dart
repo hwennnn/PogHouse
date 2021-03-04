@@ -86,6 +86,7 @@ class _RoomActionPageState extends State<RoomActionPage> {
           content: '${auth.currentUser.displayName} has created the room',
           sender: auth.currentUser.uid,
           sentAt: currentMs,
+          type: 0,
         );
 
         final room = Room(
@@ -102,6 +103,7 @@ class _RoomActionPageState extends State<RoomActionPage> {
 
         await database.setRoom(room);
         await database.addRoomToPeople(room);
+        await database.setMessage(message);
 
         setState(() {
           _isLoading = false;

@@ -93,7 +93,10 @@ class ChatListTile extends StatelessWidget {
                     Container(
                       width: MediaQuery.of(context).size.width * 0.5,
                       child: Text(
-                        "$senderName: ${room.recentMessage.content}",
+                        (room.recentMessage.type != null &&
+                                room.recentMessage.type == 0)
+                            ? "${room.recentMessage.content}"
+                            : "$senderName: ${room.recentMessage.content}",
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 15.0,
