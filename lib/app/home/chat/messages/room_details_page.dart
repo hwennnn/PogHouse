@@ -1,6 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:poghouse/app/home/chat/messages/room_details_people_list_tile.dart';
 import 'package:poghouse/app/home/people/people_list_items_builder.dart';
 import 'package:poghouse/app/model/people.dart';
@@ -57,7 +60,10 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
         BottomSheetAction(
             title: const Text('Change Chat Name'),
             onPressed: () => _changeChatName(context)),
-        BottomSheetAction(title: const Text('Change Image'), onPressed: () {}),
+        BottomSheetAction(
+          title: const Text('Change Image'),
+          onPressed: () => _changeImage(context),
+        ),
       ],
       cancelAction: CancelAction(
         title: const Text('Cancel'),
@@ -74,18 +80,29 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
         title: Text("Change Chat Name"),
         content: Material(
           child: Container(
-            height: 30,
-            child: TextFormField(
-              textAlign: TextAlign.center,
-              textAlignVertical: TextAlignVertical.center,
-              focusNode: focusNode,
-              controller: textController,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration.collapsed(
-                hintText: 'Enter a name...',
-              ),
-              textInputAction: TextInputAction.send,
-              autocorrect: false,
+            height: 40,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start, // If you want align text to left
+              children: <Widget>[
+                TextField(
+                  textAlignVertical: TextAlignVertical.center,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  focusNode: focusNode,
+                  controller: textController,
+                  textCapitalization: TextCapitalization.sentences,
+                  textInputAction: TextInputAction.send,
+                  autocorrect: false,
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
+                  decoration: InputDecoration.collapsed(
+                    hintText: 'Enter a name...',
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -111,6 +128,35 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
         ],
       ),
     );
+  }
+
+  void _changeImage(BuildContext context) async {
+    Navigator.pop(context);
+    ImagePicker picker = ImagePicker();
+    PickedFile pickedFile;
+    pickedFile = await picker.getImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+    );
+
+    if (pickedFile != null) {
+      final photoUrl = await uploadFile(File(pickedFile.path));
+      await database.updateRoomPhoto(room, photoUrl);
+    }
+  }
+
+  Future<String> uploadFile(File _image) async {
+    StorageReference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('rooms/${_image.path.split('/').last}}');
+    StorageUploadTask uploadTask = storageReference.putFile(_image);
+    await uploadTask.onComplete;
+
+    String returnURL;
+    await storageReference.getDownloadURL().then((fileURL) {
+      returnURL = fileURL;
+    });
+    return returnURL;
   }
 
   Widget _buildContents(BuildContext context) {

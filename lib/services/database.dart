@@ -21,6 +21,7 @@ abstract class Database {
   Future<void> addRoomToPeople(Room room);
   Future<void> setMessage(Message message);
   Future<void> setRecentMessage(Message message);
+  Future<void> updateRoomPhoto(Room room, String photoUrl);
   Stream<DocumentSnapshot> roomStream(String id);
   Stream<List<Room>> roomsStream(String uid);
   Stream<List<Room>> roomsDetailsStream(List<String> roomIDs);
@@ -139,6 +140,11 @@ class FirestoreDatabase implements Database {
       'lastModified': message.sentAt,
       'recentMessage': message.toMap(),
     });
+  }
+
+  Future<void> updateRoomPhoto(Room room, String photoUrl) async {
+    final roomRef = FirebaseFirestore.instance.collection('rooms').doc(room.id);
+    await roomRef.update({'photoUrl': photoUrl});
   }
 
   Stream<DocumentSnapshot> roomStream(String id) =>
