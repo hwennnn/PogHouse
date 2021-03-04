@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:poghouse/app/home/chat/messages/room_details_people_list_tile.dart';
@@ -111,6 +112,51 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
     );
   }
 
+  Widget _buildContents(BuildContext context) {
+    return Center(
+      child: Column(
+        children: [
+          _buildRoomInfo(),
+          _buildPeopleList(room),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRoomInfo() {
+    return StreamBuilder(
+      stream: database.roomStream(room.id),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          showExceptionAlertDialog(
+            context,
+            title: "Error",
+            exception: snapshot.error,
+          );
+        } else if (snapshot.connectionState == ConnectionState.active) {
+          final Room room = Room.fromMap(snapshot.data.data());
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(height: 20),
+              CustomCircleAvatar(photoUrl: room.photoUrl, width: 80),
+              SizedBox(height: 10),
+              Text(
+                room.name,
+                style: TextStyle(
+                  color: Color(0xff675C7E),
+                  fontSize: 18.0,
+                ),
+              ),
+              SizedBox(height: 20),
+            ],
+          );
+        }
+        return Loading();
+      },
+    );
+  }
+
   Widget _buildPeopleList(Room room) {
     List<People> people = [];
     List<String> uidList = [room.owner, ...room.members];
@@ -144,39 +190,7 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
           ),
         ],
       ),
-      body: Center(
-        child: StreamBuilder(
-            stream: database.roomStream(room.id),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                showExceptionAlertDialog(
-                  context,
-                  title: "Error",
-                  exception: snapshot.error,
-                );
-              } else if (snapshot.connectionState == ConnectionState.active) {
-                final Room room = Room.fromMap(snapshot.data.data());
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 20),
-                    CustomCircleAvatar(photoUrl: room.photoUrl, width: 80),
-                    SizedBox(height: 10),
-                    Text(
-                      room.name,
-                      style: TextStyle(
-                        color: Color(0xff675C7E),
-                        fontSize: 18.0,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    _buildPeopleList(room),
-                  ],
-                );
-              }
-              return Loading();
-            }),
-      ),
+      body: _buildContents(context),
     );
   }
 }
