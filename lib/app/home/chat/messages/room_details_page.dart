@@ -60,8 +60,8 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
         BottomSheetAction(title: const Text('Change Image'), onPressed: () {}),
       ],
       cancelAction: CancelAction(
-          title: const Text(
-              'Cancel')), // onPressed parameter is optional by default will dismiss the ActionSheet
+        title: const Text('Cancel'),
+      ),
     );
   }
 
@@ -105,6 +105,7 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
               if (currentName != initial) {
                 await database.updateRoomName(room, currentName);
               }
+              Navigator.pop(context);
             },
           ),
         ],
