@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:poghouse/app/landing_page.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         ),
         home: LandingPage(),
         debugShowCheckedModeBanner: false,
+        builder: EasyLoading.init(),
       ),
     );
   }

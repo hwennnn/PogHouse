@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:poghouse/app/home/chat/messages/room_details_people_list_tile.dart';
 import 'package:poghouse/app/home/people/people_list_items_builder.dart';
@@ -140,8 +141,10 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
     );
 
     if (pickedFile != null) {
+      EasyLoading.show(status: 'uploading...');
       final photoUrl = await uploadFile(File(pickedFile.path));
       await database.updateRoomPhoto(room, photoUrl);
+      EasyLoading.dismiss();
     }
   }
 
