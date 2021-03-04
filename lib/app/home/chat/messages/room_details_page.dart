@@ -43,7 +43,6 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
 
   @override
   void initState() {
-    print(room.name);
     textController = new TextEditingController(text: room.name);
     super.initState();
   }
@@ -63,7 +62,7 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
     );
   }
 
-  void _changeChatName(BuildContext context) {
+  void _changeChatName(BuildContext context) async {
     final initial = textController.text;
 
     showPlatformDialog(
@@ -97,11 +96,11 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
           ),
           BasicDialogAction(
             title: Text("OK"),
-            onPressed: () {
+            onPressed: () async {
               Navigator.pop(context);
               final currentName = textController.text;
               if (currentName != initial) {
-                database.updateRoomName(room, currentName);
+                await database.updateRoomName(room, currentName);
               }
             },
           ),
