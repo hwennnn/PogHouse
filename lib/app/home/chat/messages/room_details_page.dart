@@ -6,6 +6,8 @@ import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
+import 'package:poghouse/common_widgets/loading.dart';
+import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/database.dart';
 
 class RoomDetailsPage extends StatefulWidget {
@@ -109,9 +111,9 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
     );
   }
 
-  Widget _buildPeopleList() {
+  Widget _buildPeopleList(Room room) {
     List<People> people = [];
-    List<String> uidList = [widget.room.owner, ...widget.room.members];
+    List<String> uidList = [room.owner, ...room.members];
 
     for (String uid in uidList) {
       people.add(widget.members[uid]);
@@ -143,23 +145,37 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
         ],
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(height: 20),
-            CustomCircleAvatar(photoUrl: widget.room.photoUrl, width: 80),
-            SizedBox(height: 10),
-            Text(
-              widget.room.name,
-              style: TextStyle(
-                color: Color(0xff675C7E),
-                fontSize: 18.0,
-              ),
-            ),
-            SizedBox(height: 20),
-            _buildPeopleList(),
-          ],
-        ),
+        child: StreamBuilder(
+            stream: database.roomStream(room.id),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                showExceptionAlertDialog(
+                  context,
+                  title: "Error",
+                  exception: snapshot.error,
+                );
+              } else if (snapshot.connectionState == ConnectionState.active) {
+                final Room room = Room.fromMap(snapshot.data.data());
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20),
+                    CustomCircleAvatar(photoUrl: room.photoUrl, width: 80),
+                    SizedBox(height: 10),
+                    Text(
+                      room.name,
+                      style: TextStyle(
+                        color: Color(0xff675C7E),
+                        fontSize: 18.0,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    _buildPeopleList(room),
+                  ],
+                );
+              }
+              return Loading();
+            }),
       ),
     );
   }
