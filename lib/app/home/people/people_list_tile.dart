@@ -59,6 +59,7 @@ class PeopleListTile extends StatelessWidget {
       database: database,
       utils: utils,
       members: map,
+      isRoomExist: isRoomExist,
     );
   }
 

@@ -161,6 +161,7 @@ class ChatListTile extends StatelessWidget {
         members: members,
         database: database,
         utils: utils,
+        isRoomExist: true,
       ),
     );
   }

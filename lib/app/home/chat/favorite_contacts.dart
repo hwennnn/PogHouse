@@ -44,6 +44,7 @@ class FavoriteContacts extends StatelessWidget {
       database: database,
       utils: utils,
       members: map,
+      isRoomExist: isRoomExist,
     );
   }
 

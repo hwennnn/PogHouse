@@ -18,11 +18,13 @@ class MessageScreen extends StatefulWidget {
     @required this.members,
     this.database,
     this.utils,
+    this.isRoomExist,
   });
   final Room room;
   final Map<String, People> members;
   final Database database;
   final Utils utils;
+  final bool isRoomExist;
 
   static Future<void> show(
     BuildContext context, {
@@ -30,6 +32,7 @@ class MessageScreen extends StatefulWidget {
     Database database,
     Map<String, People> members,
     Utils utils,
+    bool isRoomExist,
   }) async {
     await Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
@@ -38,6 +41,7 @@ class MessageScreen extends StatefulWidget {
           members: members,
           database: database,
           utils: utils,
+          isRoomExist: isRoomExist,
         ),
       ),
     );
@@ -48,6 +52,7 @@ class MessageScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<MessageScreen> {
+  bool get isRoomExist => widget.isRoomExist;
   Room get room => widget.room;
   Database get database => widget.database;
   Utils get utils => widget.utils;
@@ -229,7 +234,9 @@ class _ChatScreenState extends State<MessageScreen> {
         roomID: room.id,
       );
 
-      final bool isRoomExist = await database.isRoomExist(room.id);
+      textController.clear();
+      FocusScope.of(context).requestFocus(focusNode);
+
       if (!isRoomExist) {
         print("create new conversation");
         final newRoom = new Room(
@@ -248,9 +255,6 @@ class _ChatScreenState extends State<MessageScreen> {
       }
 
       await database.setMessage(message);
-
-      textController.clear();
-      FocusScope.of(context).requestFocus(focusNode);
     }
   }
 
