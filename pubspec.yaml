@@ -42,6 +42,7 @@ dependencies:
   adaptive_action_sheet: ^1.1.0
   flutter_dialogs: ^1.1.0
   flutter_easyloading: ^2.2.2
+  shimmer: ^1.1.2
 
 # Fix "pick account" for google auth on iOS
 dependency_overrides:

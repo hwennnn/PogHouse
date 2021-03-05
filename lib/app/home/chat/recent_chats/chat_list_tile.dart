@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/messages/message_screen.dart';
+import 'package:poghouse/app/home/chat/recent_chats/chat_list_loading.dart';
 import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
-import 'package:poghouse/common_widgets/loading.dart';
 import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
@@ -34,7 +34,7 @@ class ChatListTile extends StatelessWidget {
         future: _constructMembersMap(room, database),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Loading();
+            return ChatListLoading();
           } else {
             if (snapshot.hasError) {
               showExceptionAlertDialog(
@@ -46,7 +46,7 @@ class ChatListTile extends StatelessWidget {
             } else {
               Map<String, dynamic> members = snapshot.data;
               String senderName = _formatSenderName(context, members, room);
-              return roomListTile(room, senderName, members, database, context);
+              return chatListTile(room, senderName, members, database, context);
             }
           }
         });
@@ -59,7 +59,7 @@ class ChatListTile extends StatelessWidget {
     return sender.id == auth.currentUser.uid ? "You" : sender.nickname;
   }
 
-  Widget roomListTile(Room room, String senderName, Map<String, People> members,
+  Widget chatListTile(Room room, String senderName, Map<String, People> members,
       Database database, BuildContext context) {
     return InkWell(
       child: Container(
