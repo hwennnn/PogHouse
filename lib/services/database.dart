@@ -62,7 +62,8 @@ class FirestoreDatabase implements Database {
   }
 
   Future<List<People>> retrieveRoomMembers(Room room) async {
-    List<String> members = [room.owner, ...room.members];
+    List<String> members =
+        (room.owner != null) ? [room.owner, ...room.members] : room.members;
     final snapshots = await FirebaseFirestore.instance
         .collection('people')
         .where("id", whereIn: members)
