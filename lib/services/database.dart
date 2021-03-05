@@ -13,11 +13,13 @@ abstract class Database {
   Future<List<People>> retrieveRoomMembers(Room room);
   Future<List<Room>> retrieveRooms(List<String> roomIDs);
   Future<Room> retrieveSingleRoom(String roomID);
+  Future<bool> isRoomExist(String roomID);
   Future<void> setFavorite(String uid, People people);
   Future<void> removeFavorite(String uid, People people);
   Future<void> setRoom(Room room);
   Future<void> deleteRoom(Room room);
   Future<void> updateRoomName(Room room, String roomName);
+  Future<void> addRoomToPeopleR(Room room, List<String> members);
   Future<void> addRoomToPeople(Room room);
   Future<void> setMessage(Message message);
   Future<void> setRecentMessage(Message message);
@@ -87,6 +89,25 @@ class FirestoreDatabase implements Database {
     return room;
   }
 
+  Future<bool> isRoomExist(String roomID) async {
+    bool exists = false;
+    try {
+      await FirebaseFirestore.instance
+          .collection('rooms')
+          .doc(roomID)
+          .get()
+          .then((doc) {
+        if (doc.exists)
+          exists = true;
+        else
+          exists = false;
+      });
+      return exists;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<void> setFavorite(String uid, People people) async {
     final user = FirebaseFirestore.instance.collection('people').doc(uid);
     await user.collection('favorite').doc(people.id).set(
@@ -113,6 +134,17 @@ class FirestoreDatabase implements Database {
     await roomRef.update({
       'name': roomName,
     });
+  }
+
+  Future<void> addRoomToPeopleR(Room room, List<String> members) async {
+    print(members);
+    print(room.id);
+    for (String id in members) {
+      final user = FirebaseFirestore.instance.collection('people').doc(id);
+      await user.collection('rooms').doc(room.id).set({
+        'id': room.id,
+      });
+    }
   }
 
   Future<void> addRoomToPeople(Room room) async {

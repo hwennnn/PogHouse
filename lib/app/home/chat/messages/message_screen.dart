@@ -217,18 +217,38 @@ class _ChatScreenState extends State<MessageScreen> {
     );
   }
 
-  void _sendMessage(BuildContext context, String uid) {
+  void _sendMessage(BuildContext context, String uid) async {
     final content = textController.text;
     if (content != "") {
       final currentMs = DateTime.now().millisecondsSinceEpoch;
       final message = Message(
-          id: documentId,
-          content: content,
-          sender: uid,
-          sentAt: currentMs,
-          roomID: room.id);
-      database.setMessage(message);
-      database.setRecentMessage(message);
+        id: documentId,
+        content: content,
+        sender: uid,
+        sentAt: currentMs,
+        roomID: room.id,
+      );
+
+      final bool isRoomExist = await database.isRoomExist(room.id);
+      if (!isRoomExist) {
+        print("create new conversation");
+        final newRoom = new Room(
+          id: room.id,
+          members: room.members,
+          createdAt: currentMs,
+          isPrivateChat: true,
+          recentMessage: message,
+          lastModified: currentMs,
+        );
+
+        await database.setRoom(newRoom);
+        await database.addRoomToPeopleR(newRoom, room.members);
+      } else {
+        await database.setRecentMessage(message);
+      }
+
+      await database.setMessage(message);
+
       textController.clear();
       FocusScope.of(context).requestFocus(focusNode);
     }

@@ -61,6 +61,7 @@ class FavoriteContacts extends StatelessWidget {
                   name: people.nickname,
                   photoUrl: people.photoUrl,
                   isPrivateChat: true,
+                  members: utils.retrieveMembers(auth, people),
                 );
                 return Padding(
                   padding: EdgeInsets.all(10.0),

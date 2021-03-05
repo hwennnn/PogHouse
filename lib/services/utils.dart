@@ -35,4 +35,8 @@ class Utils {
 
     return map;
   }
+
+  List<String> retrieveMembers(Auth auth, People people) {
+    return [auth.currentUser.uid, people.id];
+  }
 }
