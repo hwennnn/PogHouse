@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:poghouse/app/model/rooms.dart';
 
 class FirestoreService {
   FirestoreService._();

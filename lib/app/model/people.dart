@@ -27,6 +27,4 @@ class People {
       'photoUrl': photoUrl,
     };
   }
-
-  People toList() {}
 }
