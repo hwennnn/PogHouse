@@ -8,6 +8,7 @@ import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
 import 'package:poghouse/common_widgets/show_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
+import 'package:poghouse/services/utils.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -70,6 +71,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    return Provider<Utils>(
+      create: (_) => Utils(),
+      child: _buildContents(context),
+    );
+  }
+
+  Widget _buildContents(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
       body: WillPopScope(

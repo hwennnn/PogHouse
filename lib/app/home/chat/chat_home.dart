@@ -24,10 +24,7 @@ class _ChatHomeState extends State<ChatHome> {
   @override
   Widget build(BuildContext context) {
     // print("Build Chat");
-    return Provider<Utils>(
-      create: (_) => Utils(),
-      child: _buildContents(context),
-    );
+    return _buildContents(context);
   }
 
   Widget favoriteContacts() {
