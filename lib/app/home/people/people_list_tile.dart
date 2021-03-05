@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:poghouse/app/home/chat/messages/message_screen.dart';
 import 'package:poghouse/app/model/people.dart';
 import 'package:poghouse/app/model/rooms.dart';
@@ -29,7 +30,13 @@ class PeopleListTile extends StatelessWidget {
   }
 
   void _showMessageScreen(
-      BuildContext context, Database database, Auth auth, Utils utils) async {
+    BuildContext context,
+    Database database,
+    Auth auth,
+    Utils utils,
+  ) async {
+    EasyLoading.show(status: 'loading...');
+
     final String roomId = utils.getRoomID(auth, people.id);
     final room = Room(
       id: roomId,
@@ -43,6 +50,8 @@ class PeopleListTile extends StatelessWidget {
     final map = (isRoomExist)
         ? await _constructMembersMap(room, database)
         : utils.constructMemberMap(auth, people);
+
+    EasyLoading.dismiss();
 
     MessageScreen.show(
       context,
