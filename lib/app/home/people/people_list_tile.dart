@@ -29,7 +29,7 @@ class PeopleListTile extends StatelessWidget {
   }
 
   void _showMessageScreen(
-      BuildContext context, Database database, Auth auth, Utils utils) {
+      BuildContext context, Database database, Auth auth, Utils utils) async {
     final String roomId = utils.getRoomID(auth, people.id);
     final room = Room(
       id: roomId,
@@ -39,13 +39,28 @@ class PeopleListTile extends StatelessWidget {
       members: utils.retrieveMembers(auth, people),
     );
 
+    final bool isRoomExist = await database.isRoomExist(roomId);
+    final map = (isRoomExist)
+        ? await _constructMembersMap(room, database)
+        : utils.constructMemberMap(auth, people);
+
     MessageScreen.show(
       context,
       room: room,
       database: database,
       utils: utils,
-      members: utils.constructMemberMap(auth, people),
+      members: map,
     );
+  }
+
+  Future<Map<String, People>> _constructMembersMap(
+      Room room, Database database) async {
+    List<People> members = await database.retrieveRoomMembers(room);
+    Map<String, People> map = new Map();
+    for (People people in members) {
+      map[people.id] = people;
+    }
+    return map;
   }
 
   @override

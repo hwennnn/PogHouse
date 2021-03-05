@@ -12,6 +12,41 @@ class FavoriteContacts extends StatelessWidget {
   FavoriteContacts({this.favorites});
   final List<People> favorites;
 
+  void _showMessageScreen(BuildContext context, Database database, Auth auth,
+      Utils utils, People people) async {
+    final String roomId = utils.getRoomID(auth, people.id);
+    final room = Room(
+      id: roomId,
+      name: people.nickname,
+      photoUrl: people.photoUrl,
+      isPrivateChat: true,
+      members: utils.retrieveMembers(auth, people),
+    );
+
+    final bool isRoomExist = await database.isRoomExist(roomId);
+    final map = (isRoomExist)
+        ? await _constructMembersMap(room, database)
+        : utils.constructMemberMap(auth, people);
+
+    MessageScreen.show(
+      context,
+      room: room,
+      database: database,
+      utils: utils,
+      members: map,
+    );
+  }
+
+  Future<Map<String, People>> _constructMembersMap(
+      Room room, Database database) async {
+    List<People> members = await database.retrieveRoomMembers(room);
+    Map<String, People> map = new Map();
+    for (People people in members) {
+      map[people.id] = people;
+    }
+    return map;
+  }
+
   @override
   Widget build(BuildContext context) {
     final utils = Provider.of<Utils>(context, listen: false);
@@ -55,14 +90,6 @@ class FavoriteContacts extends StatelessWidget {
               itemCount: favorites.length,
               itemBuilder: (BuildContext context, int index) {
                 final people = favorites[index];
-                final String roomId = utils.getRoomID(auth, people.id);
-                final room = Room(
-                  id: roomId,
-                  name: people.nickname,
-                  photoUrl: people.photoUrl,
-                  isPrivateChat: true,
-                  members: utils.retrieveMembers(auth, people),
-                );
                 return Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Column(
@@ -70,15 +97,8 @@ class FavoriteContacts extends StatelessWidget {
                       CustomCircleAvatar(
                         photoUrl: people.photoUrl,
                         width: 50,
-                        onTap: () => {
-                          MessageScreen.show(
-                            context,
-                            room: room,
-                            database: database,
-                            utils: utils,
-                            members: utils.constructMemberMap(auth, people),
-                          )
-                        },
+                        onTap: () => _showMessageScreen(
+                            context, database, auth, utils, people),
                       ),
                       SizedBox(height: 6.0),
                       Text(
