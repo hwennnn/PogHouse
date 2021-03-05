@@ -7,7 +7,6 @@ import 'package:poghouse/common_widgets/loading.dart';
 import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
-import 'package:poghouse/services/utils.dart';
 import 'package:provider/provider.dart';
 
 class ChatHome extends StatefulWidget {
