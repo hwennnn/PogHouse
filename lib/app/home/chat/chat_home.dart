@@ -66,7 +66,8 @@ class _ChatHomeState extends State<ChatHome> {
           );
         } else if (snapshot.connectionState == ConnectionState.active) {
           List<Room> rooms = snapshot.data;
-          List<String> roomIDs = rooms.map((e) => e.id).toList();
+          List<String> roomIDs =
+              (rooms.length != 0) ? rooms.map((e) => e.id).toList() : ['dummy'];
           return Expanded(
             child: RecentChats(
               roomIDs: roomIDs,
