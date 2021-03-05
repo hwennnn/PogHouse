@@ -30,7 +30,7 @@ class RoomDetailsPage extends StatefulWidget {
     Map<String, People> members,
     Database database,
   }) async {
-    await Navigator.of(context).push(
+    await Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
         builder: (context) => RoomDetailsPage(
           room: room,

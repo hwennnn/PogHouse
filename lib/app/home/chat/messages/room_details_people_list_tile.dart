@@ -5,10 +5,9 @@ import 'package:poghouse/services/auth.dart';
 import 'package:provider/provider.dart';
 
 class RoomDetailsPeopleListTile extends StatelessWidget {
-  const RoomDetailsPeopleListTile({Key key, @required this.people, this.onTap})
+  const RoomDetailsPeopleListTile({Key key, @required this.people})
       : super(key: key);
   final People people;
-  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
