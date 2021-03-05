@@ -24,11 +24,13 @@ class MessageScreen extends StatefulWidget {
   final Database database;
   final Utils utils;
 
-  static Future<void> show(BuildContext context,
-      {Room room,
-      Database database,
-      Map<String, People> members,
-      Utils utils}) async {
+  static Future<void> show(
+    BuildContext context, {
+    Room room,
+    Database database,
+    Map<String, People> members,
+    Utils utils,
+  }) async {
     await Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
         builder: (context) => MessageScreen(
@@ -65,52 +67,28 @@ class _ChatScreenState extends State<MessageScreen> {
     return AppBar(
       elevation: 0.0,
       automaticallyImplyLeading: false, // Don't show the leading button
-      title: StreamBuilder(
-        stream: database.roomStream(room.id),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            showExceptionAlertDialog(
-              context,
-              title: "Error",
-              exception: snapshot.error,
-            );
-          } else if (snapshot.connectionState == ConnectionState.active) {
-            Room room = Room.fromMap(snapshot.data.data());
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.arrow_back_ios),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                InkWell(
-                  child: Row(
-                    children: [
-                      CustomCircleAvatar(
-                        photoUrl: room.photoUrl,
-                        width: 40,
-                        backgroundColor: Theme.of(context).primaryColor,
-                      ),
-                      SizedBox(width: 10),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(room.name),
-                        ],
-                      ),
-                    ],
-                  ),
-                  onTap: () => RoomDetailsPage.show(context,
-                      room: room, members: members, database: database),
-                ),
-              ],
-            );
-          }
-          return Container();
-        },
-      ),
+      title: (room.isPrivateChat != null && room.isPrivateChat)
+          ? AppBarContent(room: room, members: members, database: database)
+          : StreamBuilder(
+              stream: database.roomStream(room.id),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  showExceptionAlertDialog(
+                    context,
+                    title: "Error",
+                    exception: snapshot.error,
+                  );
+                } else if (snapshot.connectionState == ConnectionState.active) {
+                  Room room = Room.fromMap(snapshot.data.data());
+                  return AppBarContent(
+                    room: room,
+                    members: members,
+                    database: database,
+                  );
+                }
+                return Container();
+              },
+            ),
     );
   }
 
@@ -259,5 +237,55 @@ class _ChatScreenState extends State<MessageScreen> {
   @override
   Widget build(BuildContext context) {
     return _buildContents(context);
+  }
+}
+
+class AppBarContent extends StatelessWidget {
+  const AppBarContent({
+    Key key,
+    @required this.room,
+    @required this.members,
+    @required this.database,
+  }) : super(key: key);
+
+  final Room room;
+  final Map<String, People> members;
+  final Database database;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: () => Navigator.pop(context),
+        ),
+        InkWell(
+          child: Row(
+            children: [
+              CustomCircleAvatar(
+                photoUrl: room.photoUrl,
+                width: 40,
+                backgroundColor: Theme.of(context).primaryColor,
+              ),
+              SizedBox(width: 10),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(room.name),
+                ],
+              ),
+            ],
+          ),
+          onTap: () => (room.isPrivateChat != null && room.isPrivateChat)
+              ? {}
+              : RoomDetailsPage.show(context,
+                  room: room, members: members, database: database),
+        ),
+      ],
+    );
   }
 }

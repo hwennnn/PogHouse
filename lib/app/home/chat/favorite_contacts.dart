@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:poghouse/app/home/chat/messages/message_screen.dart';
 import 'package:poghouse/app/model/people.dart';
+import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
+import 'package:poghouse/services/auth.dart';
+import 'package:poghouse/services/database.dart';
+import 'package:poghouse/services/utils.dart';
+import 'package:provider/provider.dart';
 
 class FavoriteContacts extends StatelessWidget {
   FavoriteContacts({this.favorites});
@@ -8,6 +14,10 @@ class FavoriteContacts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final utils = Provider.of<Utils>(context, listen: false);
+    final database = Provider.of<Database>(context, listen: false);
+    final auth = Provider.of<AuthBase>(context, listen: false);
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10.0),
       child: Column(
@@ -45,6 +55,13 @@ class FavoriteContacts extends StatelessWidget {
               itemCount: favorites.length,
               itemBuilder: (BuildContext context, int index) {
                 final people = favorites[index];
+                final String roomId = utils.getRoomID(auth, people.id);
+                final room = Room(
+                  id: roomId,
+                  name: people.nickname,
+                  photoUrl: people.photoUrl,
+                  isPrivateChat: true,
+                );
                 return Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Column(
@@ -52,6 +69,15 @@ class FavoriteContacts extends StatelessWidget {
                       CustomCircleAvatar(
                         photoUrl: people.photoUrl,
                         width: 50,
+                        onTap: () => {
+                          MessageScreen.show(
+                            context,
+                            room: room,
+                            database: database,
+                            utils: utils,
+                            members: utils.constructMemberMap(auth, people),
+                          )
+                        },
                       ),
                       SizedBox(height: 6.0),
                       Text(

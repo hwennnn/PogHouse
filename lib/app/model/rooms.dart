@@ -2,15 +2,17 @@ import 'package:meta/meta.dart';
 import 'package:poghouse/app/model/message.dart';
 
 class Room {
-  Room(
-      {@required this.id,
-      this.name,
-      this.photoUrl,
-      this.createdAt,
-      this.owner,
-      this.members,
-      this.recentMessage,
-      this.lastModified});
+  Room({
+    @required this.id,
+    this.name,
+    this.photoUrl,
+    this.createdAt,
+    this.owner,
+    this.members,
+    this.recentMessage,
+    this.lastModified,
+    this.isPrivateChat,
+  });
   final String id;
   final String name;
   final String photoUrl;
@@ -19,6 +21,7 @@ class Room {
   final List<String> members;
   final Message recentMessage;
   final int lastModified;
+  final bool isPrivateChat;
 
   factory Room.fromMap(Map<String, dynamic> data) {
     if (data == null) {
@@ -34,6 +37,7 @@ class Room {
     final List<String> members =
         (data['members'] as List)?.map((item) => item as String)?.toList();
     final Message recentMessage = Message.fromMap(data['recentMessage']);
+    final bool isPrivateChat = data['isPrivateChat'];
 
     return Room(
       id: id,
@@ -44,6 +48,7 @@ class Room {
       members: members,
       recentMessage: recentMessage,
       lastModified: lastModified,
+      isPrivateChat: isPrivateChat,
     );
   }
 
@@ -57,6 +62,7 @@ class Room {
       'members': members,
       'lastModified': lastModified,
       'recentMessage': recentMessage.toMap(),
+      'isPrivateChat': isPrivateChat,
     };
   }
 }

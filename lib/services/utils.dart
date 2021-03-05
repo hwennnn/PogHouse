@@ -1,4 +1,7 @@
 import 'package:intl/intl.dart';
+import 'package:poghouse/app/model/people.dart';
+
+import 'auth.dart';
 
 class Utils {
   Utils();
@@ -18,5 +21,18 @@ class Utils {
     }
 
     return format.format(date);
+  }
+
+  String getRoomID(Auth auth, String peopleID) {
+    final List<String> ids = [auth.currentUser.uid, peopleID];
+    ids.sort();
+    return ids.join('');
+  }
+
+  Map<String, People> constructMemberMap(Auth auth, People people) {
+    Map<String, People> map = {};
+    map[people.nickname] = people;
+
+    return map;
   }
 }
