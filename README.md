@@ -7,13 +7,11 @@ A minimalistic chat app made by Flutter and Firebase.
 * Support login with google and facebook account, chat with any user, send text, update group info, setting favorite contacts.
 
 ## Screenshots
-<p align="row">
-  <img src= "screenshots/chat_home.PNG" height="50%" width="50%">
-  <img src= "screenshots/chat_screen.PNG" height="50%" width="50%">
-</p>
+Chat Home            |  Message Screen
+:-------------------------:|:-------------------------:
+![](screenshots/chat_home.PNG)  |  ![](screenshots/chat_screen.PNG)
 
 ## Built With
-
 - [Cloud firestore](https://firebase.flutter.dev/docs/overview) - Used for cloud database
 - [Firebase Auth](https://firebase.google.com/docs/auth) - Used for user authentication
 - [Cloud Storage](https://firebase.google.com/docs/storage) - Used to store images
