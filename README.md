@@ -4,7 +4,8 @@ A minimalistic chat app made by Flutter and Firebase.
 
 ## Description
 * A chat app made by Flutter and Firebase.
-* Support login with google and facebook account, chat with any user, send text, update group info, setting favorite contacts.
+* Support login with google and facebook account
+* Chat with any user, send text, update group info, setting favorite contacts.
 
 ## Screenshots
 Chat Home            |  Message Screen
