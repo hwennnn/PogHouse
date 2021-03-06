@@ -138,8 +138,6 @@ class FirestoreDatabase implements Database {
   }
 
   Future<void> addRoomToPeopleR(Room room, List<String> members) async {
-    print(members);
-    print(room.id);
     for (String id in members) {
       final user = FirebaseFirestore.instance.collection('people').doc(id);
       await user.collection('rooms').doc(room.id).set({

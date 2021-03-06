@@ -74,7 +74,7 @@ class _MessageListTileState extends State<MessageListTile> {
                       children: [
                         (!widget.isMe && !widget.isHideNickname)
                             ? Padding(
-                                padding: EdgeInsets.only(left: 5, bottom: 5),
+                                padding: EdgeInsets.only(left: 10, bottom: 5),
                                 child: Text(
                                   widget.sender.nickname,
                                   style: TextStyle(

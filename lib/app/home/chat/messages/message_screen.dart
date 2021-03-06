@@ -159,10 +159,12 @@ class _ChatScreenState extends State<MessageScreen> {
               final Message message = messages[n - index - 1];
               final bool isMe = message.sender == uid;
               final bool isHideNickname = index + 1 < n &&
-                  messages[n - index - 2].sender == message.sender;
+                  messages[n - index - 2].sender == message.sender &&
+                  (messages[n - index - 2].type == null);
               final bool isHideAvatar = index != 0 &&
                   index + 1 < n &&
-                  messages[n - index].sender == message.sender;
+                  messages[n - index].sender == message.sender &&
+                  messages[n - index].type == null;
               return MessageListTile(
                 message: message,
                 isMe: isMe,
@@ -238,7 +240,6 @@ class _ChatScreenState extends State<MessageScreen> {
       FocusScope.of(context).requestFocus(focusNode);
 
       if (!isRoomExist) {
-        print("create new conversation");
         final newRoom = new Room(
           id: room.id,
           members: room.members,
