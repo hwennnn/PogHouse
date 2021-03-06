@@ -83,7 +83,11 @@ class ChatListTile extends StatelessWidget {
   String _formatSenderName(
       BuildContext context, Map<String, People> members, Room room, Auth auth) {
     final People sender = members[room.recentMessage.sender];
-    return sender.id == auth.currentUser.uid ? "You" : "";
+    return sender.id == auth.currentUser.uid
+        ? "You"
+        : (room.isPrivateChat != null && room.isPrivateChat)
+            ? ""
+            : sender.nickname;
   }
 
   Widget chatListTile(Room room, String senderName, Map<String, People> members,
@@ -120,8 +124,8 @@ class ChatListTile extends StatelessWidget {
                     Container(
                       width: MediaQuery.of(context).size.width * 0.55,
                       child: Text(
-                        (room.recentMessage.type != null &&
-                                    room.recentMessage.type == 0 ||
+                        ((room.recentMessage.type != null &&
+                                    room.recentMessage.type == 0) ||
                                 senderName == "")
                             ? "${room.recentMessage.content}"
                             : "$senderName: ${room.recentMessage.content}",
