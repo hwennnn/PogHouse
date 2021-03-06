@@ -118,7 +118,7 @@ class ChatListTile extends StatelessWidget {
                     ),
                     SizedBox(height: 5.0),
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.5,
+                      width: MediaQuery.of(context).size.width * 0.55,
                       child: Text(
                         (room.recentMessage.type != null &&
                                     room.recentMessage.type == 0 ||
@@ -127,7 +127,7 @@ class ChatListTile extends StatelessWidget {
                             : "$senderName: ${room.recentMessage.content}",
                         style: TextStyle(
                           color: Colors.grey,
-                          fontSize: 15.0,
+                          fontSize: 13.0,
                           fontWeight: FontWeight.w600,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -137,20 +137,22 @@ class ChatListTile extends StatelessWidget {
                 ),
               ],
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Text(
-                  utils.readTimestamp(room.recentMessage.sentAt),
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 13.0,
-                    fontWeight: FontWeight.bold,
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Text(
+                    utils.readTimestamp(room.recentMessage.sentAt),
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 13.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Text(''),
-              ],
+                  Text(''),
+                ],
+              ),
             ),
           ],
         ),
