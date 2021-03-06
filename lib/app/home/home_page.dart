@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:poghouse/app/home/chat/chat_home.dart';
 import 'package:poghouse/app/home/room/room_action_page.dart';
-import 'package:poghouse/app/home/cupertino_home_scaffold.dart';
+import 'package:poghouse/app/home/tab_bar/cupertino_home_scaffold.dart';
 import 'package:poghouse/app/home/people/people_home.dart';
-import 'package:poghouse/app/home/tab_item.dart';
+import 'package:poghouse/app/home/tab_bar/tab_item.dart';
 import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
 import 'package:poghouse/common_widgets/show_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
