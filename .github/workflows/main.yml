@@ -41,7 +41,7 @@ jobs:
     
     # Build apk.
     - run: flutter build apk
-    - run: flutter build ios --release --no-codesign
+#     - run: flutter build ios --release --no-codesign
 
     
     # Upload generated apk to the artifacts.
