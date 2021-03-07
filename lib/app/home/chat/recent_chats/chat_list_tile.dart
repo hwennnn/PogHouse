@@ -103,58 +103,49 @@ class ChatListTile extends StatelessWidget {
           ),
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                CustomCircleAvatar(photoUrl: room.photoUrl, width: 40),
-                SizedBox(width: 20.0),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      room.name,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: 5.0),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.55,
-                      child: Text(
-                        ((room.recentMessage.type != null &&
-                                    room.recentMessage.type == 0) ||
-                                senderName == "")
-                            ? "${room.recentMessage.content}"
-                            : "$senderName: ${room.recentMessage.content}",
+            CustomCircleAvatar(photoUrl: room.photoUrl, width: 40),
+            SizedBox(width: 20.0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        room.name,
                         style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 13.0,
+                          color: Colors.black,
+                          fontSize: 15.0,
                           fontWeight: FontWeight.w600,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
+                      Text(
+                        utils.readTimestamp(room.recentMessage.sentAt),
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 13.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5.0),
                   Text(
-                    utils.readTimestamp(room.recentMessage.sentAt),
+                    ((room.recentMessage.type != null &&
+                                room.recentMessage.type == 0) ||
+                            senderName == "")
+                        ? "${room.recentMessage.content}"
+                        : "$senderName: ${room.recentMessage.content}",
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 13.0,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  Text(''),
                 ],
               ),
             ),
