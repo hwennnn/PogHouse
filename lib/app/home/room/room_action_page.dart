@@ -178,7 +178,11 @@ class _RoomActionPageState extends State<RoomActionPage> {
       TextFormField(
         decoration: InputDecoration(labelText: 'Room Name'),
         initialValue: _name,
-        validator: (value) => value.isNotEmpty ? null : 'Name can\'t be empty',
+        validator: (value) => value.isNotEmpty
+            ? value.length < 20
+                ? null
+                : 'The name is too long!'
+            : 'Name can\'t be empty',
         onSaved: (value) => _name = value,
       ),
       SizedBox(height: 20),

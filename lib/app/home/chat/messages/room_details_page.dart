@@ -13,6 +13,7 @@ import 'package:poghouse/app/model/rooms.dart';
 import 'package:poghouse/common_widgets/custom_circle_avatar.dart';
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:poghouse/common_widgets/loading.dart';
+import 'package:poghouse/common_widgets/show_alert_dialog.dart';
 import 'package:poghouse/common_widgets/show_exception_alert_dialog.dart';
 import 'package:poghouse/services/auth.dart';
 import 'package:poghouse/services/database.dart';
@@ -122,8 +123,16 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
           BasicDialogAction(
             title: Text("OK"),
             onPressed: () async {
-              Navigator.pop(context);
               final currentName = textController.text;
+              if (currentName.length > 20) {
+                showAlertDialog(context,
+                    title: 'The name is too long',
+                    content: 'Please enter a shorter name!',
+                    defaultActionText: 'Noted');
+                return;
+              }
+
+              Navigator.pop(context);
               if (currentName != initial) {
                 await database.updateRoomName(room, currentName);
               }
