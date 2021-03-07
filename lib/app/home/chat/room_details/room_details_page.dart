@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:poghouse/app/home/chat/messages/room_details_people_list_tile.dart';
+import 'package:poghouse/app/home/chat/room_details/room_details_people_list_tile.dart';
 import 'package:poghouse/app/home/people/people_list_items_builder.dart';
 import 'package:poghouse/app/model/message.dart';
 import 'package:poghouse/app/model/people.dart';
