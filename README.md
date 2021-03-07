@@ -44,5 +44,5 @@ Chat Home            |  Message Screen
 
 ## Contribute
 
-We would love you for the contribution to **Countdown**, any issue or pull requrest is welcomed.
+We would love you for the contribution to **PogHouse**, any issue or pull requrest is welcomed.
 
