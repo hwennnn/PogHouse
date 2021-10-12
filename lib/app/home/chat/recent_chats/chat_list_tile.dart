@@ -11,10 +11,14 @@ import 'package:poghouse/services/utils.dart';
 import 'package:provider/provider.dart';
 
 class ChatListTile extends StatelessWidget {
-  const ChatListTile({Key key, @required this.room, this.onTap, this.utils})
-      : super(key: key);
+  const ChatListTile({
+    Key? key,
+    required this.room,
+    this.onTap,
+    required this.utils,
+  }) : super(key: key);
   final Room room;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final Utils utils;
 
   Future<Map<String, People>> _constructMembersMap(
@@ -22,7 +26,7 @@ class ChatListTile extends StatelessWidget {
     List<People> members = await database.retrieveRoomMembers(room);
     Map<String, People> map = new Map();
     for (People people in members) {
-      map[people.id] = people;
+      map[people.id!] = people;
     }
     return map;
   }
@@ -46,10 +50,10 @@ class ChatListTile extends StatelessWidget {
               );
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {
-              Map<String, dynamic> members = snapshot.data;
-              String senderName =
-                  _formatSenderName(context, members, room, auth);
-              final _room = (room.isPrivateChat != null && room.isPrivateChat)
+              Map<String, dynamic> members = snapshot.data!;
+              String? senderName = _formatSenderName(
+                  context, members as Map<String, People>, room, auth as Auth);
+              final _room = (room.isPrivateChat != null && room.isPrivateChat!)
                   ? _getNewRoom(auth, members, room)
                   : room;
               return chatListTile(
@@ -60,7 +64,7 @@ class ChatListTile extends StatelessWidget {
   }
 
   Room _getNewRoom(Auth auth, Map<String, People> members, Room room) {
-    final people = _getPeopleInfo(auth, members, room);
+    final people = _getPeopleInfo(auth, members, room)!;
     final newRoom = new Room(
       id: room.id,
       name: people.nickname,
@@ -73,25 +77,31 @@ class ChatListTile extends StatelessWidget {
     return newRoom;
   }
 
-  People _getPeopleInfo(Auth auth, Map<String, People> members, Room room) {
-    final currentUid = auth.currentUser.uid;
+  People? _getPeopleInfo(Auth auth, Map<String, People> members, Room room) {
+    final currentUid = auth.currentUser!.uid;
     final peopleUid =
-        room.members[0] == currentUid ? room.members[1] : room.members[0];
+        room.members![0] == currentUid ? room.members![1] : room.members![0];
     return members[peopleUid];
   }
 
-  String _formatSenderName(
-      BuildContext context, Map<String, People> members, Room room, Auth auth) {
-    final People sender = members[room.recentMessage.sender];
-    return sender.id == auth.currentUser.uid
+  String? _formatSenderName(BuildContext context, Map<String?, People> members,
+      Room room, Auth auth) {
+    final People sender = members[room.recentMessage!.sender]!;
+    return sender.id == auth.currentUser!.uid
         ? "You"
-        : (room.isPrivateChat != null && room.isPrivateChat)
+        : (room.isPrivateChat != null && room.isPrivateChat!)
             ? ""
             : sender.nickname;
   }
 
-  Widget chatListTile(Room room, String senderName, Map<String, People> members,
-      Database database, BuildContext context, Auth auth) {
+  Widget chatListTile(
+    Room room,
+    String? senderName,
+    Map<String, People> members,
+    Database database,
+    BuildContext context,
+    Auth auth,
+  ) {
     return InkWell(
       child: Container(
         margin: EdgeInsets.only(top: 5.0, bottom: 5.0, right: 20.0),
@@ -114,7 +124,7 @@ class ChatListTile extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        room.name,
+                        room.name!,
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 15.0,
@@ -123,7 +133,7 @@ class ChatListTile extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        utils.readTimestamp(room.recentMessage.sentAt),
+                        utils.readTimestamp(room.recentMessage!.sentAt!),
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 13.0,
@@ -134,11 +144,11 @@ class ChatListTile extends StatelessWidget {
                   ),
                   SizedBox(height: 5.0),
                   Text(
-                    ((room.recentMessage.type != null &&
-                                room.recentMessage.type == 0) ||
+                    ((room.recentMessage!.type != null &&
+                                room.recentMessage!.type == 0) ||
                             senderName == "")
-                        ? "${room.recentMessage.content}"
-                        : "$senderName: ${room.recentMessage.content}",
+                        ? "${room.recentMessage!.content}"
+                        : "$senderName: ${room.recentMessage!.content}",
                     style: TextStyle(
                       color: Colors.grey,
                       fontSize: 13.0,

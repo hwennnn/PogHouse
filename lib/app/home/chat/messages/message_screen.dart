@@ -14,11 +14,11 @@ import 'package:provider/provider.dart';
 
 class MessageScreen extends StatefulWidget {
   MessageScreen({
-    @required this.room,
-    @required this.members,
-    this.database,
-    this.utils,
-    this.isRoomExist,
+    required this.room,
+    required this.members,
+    required this.database,
+    required this.utils,
+    required this.isRoomExist,
   });
   final Room room;
   final Map<String, People> members;
@@ -28,11 +28,11 @@ class MessageScreen extends StatefulWidget {
 
   static Future<void> show(
     BuildContext context, {
-    Room room,
-    Database database,
-    Map<String, People> members,
-    Utils utils,
-    bool isRoomExist,
+    required Room room,
+    required Database database,
+    required Map<String, People> members,
+    required Utils utils,
+    required bool isRoomExist,
   }) async {
     await Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
@@ -68,11 +68,11 @@ class _ChatScreenState extends State<MessageScreen> {
     super.dispose();
   }
 
-  Widget appBar() {
+  PreferredSizeWidget appBar() {
     return AppBar(
       elevation: 0.0,
       automaticallyImplyLeading: false, // Don't show the leading button
-      title: (room.isPrivateChat != null && room.isPrivateChat)
+      title: (room.isPrivateChat != null && room.isPrivateChat!)
           ? AppBarContent(room: room, members: members, database: database)
           : StreamBuilder(
               stream: database.roomStream(room.id),
@@ -84,7 +84,8 @@ class _ChatScreenState extends State<MessageScreen> {
                     exception: snapshot.error,
                   );
                 } else if (snapshot.connectionState == ConnectionState.active) {
-                  Room room = Room.fromMap(snapshot.data.data());
+                  Room room =
+                      Room.fromMap(snapshot.data as Map<String, dynamic>);
                   return AppBarContent(
                     room: room,
                     members: members,
@@ -109,7 +110,7 @@ class _ChatScreenState extends State<MessageScreen> {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondary,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(30.0),
                       topRight: Radius.circular(30.0),
@@ -135,7 +136,7 @@ class _ChatScreenState extends State<MessageScreen> {
 
   Widget _buildMessage(BuildContext context) {
     final auth = Provider.of<AuthBase>(context, listen: false);
-    final uid = auth.currentUser.uid;
+    final uid = auth.currentUser!.uid;
 
     return StreamBuilder(
       stream: database.messagesStream(room.id),
@@ -147,9 +148,9 @@ class _ChatScreenState extends State<MessageScreen> {
             exception: snapshot.error,
           );
         } else if (snapshot.connectionState == ConnectionState.active) {
-          List<Message> messages = snapshot.data;
+          List<Message> messages = snapshot.data as List<Message>;
           final int n = messages.length;
-          messages.sort((a, b) => a.sentAt.compareTo(b.sentAt));
+          messages.sort((a, b) => a.sentAt!.compareTo(b.sentAt!));
           return ListView.builder(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             reverse: true,
@@ -183,7 +184,7 @@ class _ChatScreenState extends State<MessageScreen> {
 
   Widget _buildMessageComposer() {
     final auth = Provider.of<AuthBase>(context, listen: false);
-    final uid = auth.currentUser.uid;
+    final uid = auth.currentUser!.uid;
 
     return Padding(
       padding: EdgeInsets.only(top: 10, left: 30, right: 30, bottom: 30),
@@ -267,11 +268,10 @@ class _ChatScreenState extends State<MessageScreen> {
 
 class AppBarContent extends StatelessWidget {
   const AppBarContent({
-    Key key,
-    @required this.room,
-    @required this.members,
-    @required this.database,
-  }) : super(key: key);
+    required this.room,
+    required this.members,
+    required this.database,
+  });
 
   final Room room;
   final Map<String, People> members;
@@ -300,12 +300,12 @@ class AppBarContent extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(room.name),
+                  Text(room.name!),
                 ],
               ),
             ],
           ),
-          onTap: () => (room.isPrivateChat != null && room.isPrivateChat)
+          onTap: () => (room.isPrivateChat != null && room.isPrivateChat!)
               ? {}
               : RoomDetailsPage.show(context,
                   room: room, members: members, database: database),

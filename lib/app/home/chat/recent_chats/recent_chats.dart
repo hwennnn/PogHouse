@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class RecentChats extends StatelessWidget {
   RecentChats({this.roomIDs});
-  final List<String> roomIDs;
+  final List<String?>? roomIDs;
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +32,8 @@ class RecentChats extends StatelessWidget {
               );
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {
-              List<Room> rooms = snapshot.data;
-              rooms.sort((b, a) => a.lastModified.compareTo(b.lastModified));
+              List<Room> rooms = snapshot.data as List<Room>;
+              rooms.sort((b, a) => a.lastModified!.compareTo(b.lastModified!));
               return ChatListItemBuilder(
                 rooms: rooms,
                 itemBuilder: (context, room) => ChatListTile(

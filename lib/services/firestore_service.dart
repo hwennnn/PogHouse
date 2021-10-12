@@ -1,25 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
 class FirestoreService {
   FirestoreService._();
   static final instance = FirestoreService._();
 
-  Future<void> setData({String path, Map<String, dynamic> data}) async {
-    final reference = FirebaseFirestore.instance.doc(path);
+  Future<void> setData({
+    required String path,
+    Map<String, dynamic>? data,
+  }) async {
+    final DocumentReference<Map<String, dynamic>?> reference =
+        FirebaseFirestore.instance.doc(path);
     print('$path: $data');
     await reference.set(data);
   }
 
-  Future<void> deleteData({@required String path}) async {
+  Future<void> deleteData({required String path}) async {
     final reference = FirebaseFirestore.instance.doc(path);
     print('delete: $path');
     await reference.delete();
   }
 
   Stream<List<T>> collectionStream<T>({
-    @required String path,
-    @required T Function(Map<String, dynamic> data) builder,
+    required String path,
+    required T Function(Map<String, dynamic> data) builder,
   }) {
     final reference = FirebaseFirestore.instance.collection(path);
     final snapshots = reference.snapshots();
@@ -31,8 +34,8 @@ class FirestoreService {
   }
 
   Stream<List<T>> favoriteCollectionStream<T>({
-    @required String uid,
-    @required T Function(Map<String, dynamic> data) builder,
+    required String uid,
+    required T Function(Map<String, dynamic> data) builder,
   }) {
     final reference = FirebaseFirestore.instance
         .collection('people')
@@ -47,8 +50,8 @@ class FirestoreService {
   }
 
   Stream<DocumentSnapshot> roomCollectionStream<T>({
-    @required String roomID,
-    @required T Function(Map<String, dynamic> data) builder,
+    required String? roomID,
+    required T Function(Map<String, dynamic> data) builder,
   }) {
     final reference =
         FirebaseFirestore.instance.collection('rooms').doc(roomID);
@@ -57,8 +60,8 @@ class FirestoreService {
   }
 
   Stream<List<T>> roomsCollectionStream<T>({
-    @required String uid,
-    @required T Function(Map<String, dynamic> data) builder,
+    required String uid,
+    required T Function(Map<String, dynamic> data) builder,
   }) {
     final reference = FirebaseFirestore.instance
         .collection('people')
@@ -73,8 +76,8 @@ class FirestoreService {
   }
 
   Stream<List<T>> roomsDetailsCollectionStream<T>({
-    @required List<String> roomIDs,
-    @required T Function(Map<String, dynamic> data) builder,
+    required List<String?>? roomIDs,
+    required T Function(Map<String, dynamic> data) builder,
   }) {
     final reference = FirebaseFirestore.instance
         .collection('rooms')
@@ -88,8 +91,8 @@ class FirestoreService {
   }
 
   Stream<List<T>> messagesCollectionStream<T>({
-    @required String roomID,
-    @required T Function(Map<String, dynamic> data) builder,
+    required String? roomID,
+    required T Function(Map<String, dynamic> data) builder,
   }) {
     final reference = FirebaseFirestore.instance
         .collection('rooms')

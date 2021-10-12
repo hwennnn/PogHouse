@@ -11,11 +11,11 @@ import 'package:provider/provider.dart';
 
 class PeopleListTile extends StatelessWidget {
   const PeopleListTile(
-      {Key key, @required this.people, @required this.favorite, this.onTap})
+      {Key? key, required this.people, required this.favorite, this.onTap})
       : super(key: key);
   final People people;
-  final List<String> favorite;
-  final VoidCallback onTap;
+  final List<String?> favorite;
+  final VoidCallback? onTap;
 
   bool isFavourite(BuildContext context) {
     return favorite.contains(people.id);
@@ -23,9 +23,9 @@ class PeopleListTile extends StatelessWidget {
 
   void addToFavourite(BuildContext context, Database database, Auth auth) {
     if (!isFavourite(context)) {
-      database.setFavorite(auth.currentUser.uid, people);
+      database.setFavorite(auth.currentUser!.uid, people);
     } else {
-      database.removeFavorite(auth.currentUser.uid, people);
+      database.removeFavorite(auth.currentUser!.uid, people);
     }
   }
 
@@ -64,11 +64,13 @@ class PeopleListTile extends StatelessWidget {
   }
 
   Future<Map<String, People>> _constructMembersMap(
-      Room room, Database database) async {
+    Room room,
+    Database database,
+  ) async {
     List<People> members = await database.retrieveRoomMembers(room);
     Map<String, People> map = new Map();
     for (People people in members) {
-      map[people.id] = people;
+      map[people.id!] = people;
     }
     return map;
   }
@@ -85,7 +87,7 @@ class PeopleListTile extends StatelessWidget {
         photoUrl: people.photoUrl,
         width: 40,
       ),
-      title: Text(people.nickname),
+      title: Text(people.nickname!),
       trailing: IconButton(
         icon: Icon(
           _isFavourite ? Icons.favorite : Icons.favorite_border,
@@ -94,13 +96,13 @@ class PeopleListTile extends StatelessWidget {
         onPressed: () => addToFavourite(
           context,
           database,
-          auth,
+          auth as Auth,
         ),
       ),
       onTap: () => _showMessageScreen(
         context,
         database,
-        auth,
+        auth as Auth,
         utils,
       ),
     );

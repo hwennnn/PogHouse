@@ -4,8 +4,8 @@ import 'package:poghouse/common_widgets/show_alert_dialog.dart';
 
 Future<void> showExceptionAlertDialog(
   BuildContext context, {
-  @required String title,
-  @required Exception exception,
+  required String title,
+  required dynamic exception,
 }) =>
     showAlertDialog(
       context,
@@ -14,7 +14,7 @@ Future<void> showExceptionAlertDialog(
       defaultActionText: 'OK',
     );
 
-String _message(Exception exception) {
+String? _message(dynamic exception) {
   if (exception is FirebaseException) {
     return exception.message;
   }

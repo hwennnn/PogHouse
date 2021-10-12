@@ -5,18 +5,18 @@ import 'package:flutter/rendering.dart';
 class BubblePainter extends CustomPainter {
   BubblePainter({this.isIncoming});
 
-  final bool isIncoming;
+  final bool? isIncoming;
 
   @override
   void paint(Canvas canvas, Size size) {
     final Paint paint = Paint()
-      ..color = (!isIncoming) ? Color(0xffEDEEF7) : Color(0xffEEEEF0)
+      ..color = (!isIncoming!) ? Color(0xffEDEEF7) : Color(0xffEEEEF0)
       ..style = PaintingStyle.fill;
     final Path bubble = Path();
     final width = size.width;
     final height = size.height;
 
-    if (!isIncoming) {
+    if (!isIncoming!) {
       bubble
         ..moveTo(width - 22.0, height)
         ..lineTo(17.0, height)
@@ -62,12 +62,12 @@ class BubblePainter extends CustomPainter {
 // This is my custom RenderObject.
 class BubbleMessage extends SingleChildRenderObjectWidget {
   BubbleMessage({
-    Key key,
+    Key? key,
     this.painter,
-    Widget child,
+    Widget? child,
   }) : super(key: key, child: child);
 
-  final CustomPainter painter;
+  final CustomPainter? painter;
 
   @override
   RenderCustomPaint createRenderObject(BuildContext context) {

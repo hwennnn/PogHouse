@@ -18,18 +18,18 @@ abstract class Database {
   Future<void> removeFavorite(String uid, People people);
   Future<void> setRoom(Room room);
   Future<void> deleteRoom(Room room);
-  Future<void> updateRoomName(Room room, String roomName);
-  Future<void> addRoomToPeopleR(Room room, List<String> members);
+  Future<void> updateRoomName(Room? room, String roomName);
+  Future<void> addRoomToPeopleR(Room room, List<String?>? members);
   Future<void> addRoomToPeople(Room room);
   Future<void> setMessage(Message message);
   Future<void> setRecentMessage(Message message);
-  Future<void> updateRoomPhoto(Room room, String photoUrl);
-  Stream<DocumentSnapshot> roomStream(String id);
+  Future<void> updateRoomPhoto(Room? room, String? photoUrl);
+  Stream<DocumentSnapshot> roomStream(String? id);
   Stream<List<Room>> roomsStream(String uid);
-  Stream<List<Room>> roomsDetailsStream(List<String> roomIDs);
+  Stream<List<Room>> roomsDetailsStream(List<String?>? roomIDs);
   Stream<List<People>> peopleStream();
   Stream<List<People>> favoriteStream(String uid);
-  Stream<List<Message>> messagesStream(String roomID);
+  Stream<List<Message>> messagesStream(String? roomID);
 }
 
 String get documentId => Uuid().v4();
@@ -57,13 +57,13 @@ class FirestoreDatabase implements Database {
   Future<People> retrieveSinglePeople(String uid) async {
     final snapshot =
         await FirebaseFirestore.instance.collection('people').doc(uid).get();
-    People people = People.fromMap(snapshot.data());
+    People people = People.fromMap(snapshot.data()!);
     return people;
   }
 
   Future<List<People>> retrieveRoomMembers(Room room) async {
-    List<String> members =
-        (room.owner != null) ? [room.owner, ...room.members] : room.members;
+    List<String?>? members =
+        (room.owner != null) ? [room.owner, ...room.members!] : room.members;
     final snapshots = await FirebaseFirestore.instance
         .collection('people')
         .where("id", whereIn: members)
@@ -86,7 +86,7 @@ class FirestoreDatabase implements Database {
   Future<Room> retrieveSingleRoom(String roomID) async {
     final snapshot =
         await FirebaseFirestore.instance.collection('rooms').doc(roomID).get();
-    Room room = Room.fromMap(snapshot.data());
+    Room room = Room.fromMap(snapshot.data()!);
     return room;
   }
 
@@ -130,15 +130,16 @@ class FirestoreDatabase implements Database {
         path: APIPath.room(room.id),
       );
 
-  Future<void> updateRoomName(Room room, String roomName) async {
-    final roomRef = FirebaseFirestore.instance.collection('rooms').doc(room.id);
+  Future<void> updateRoomName(Room? room, String roomName) async {
+    final roomRef =
+        FirebaseFirestore.instance.collection('rooms').doc(room!.id);
     await roomRef.update({
       'name': roomName,
     });
   }
 
-  Future<void> addRoomToPeopleR(Room room, List<String> members) async {
-    for (String id in members) {
+  Future<void> addRoomToPeopleR(Room room, List<String?>? members) async {
+    for (String? id in members!) {
       final user = FirebaseFirestore.instance.collection('people').doc(id);
       await user.collection('rooms').doc(room.id).set({
         'id': room.id,
@@ -147,8 +148,8 @@ class FirestoreDatabase implements Database {
   }
 
   Future<void> addRoomToPeople(Room room) async {
-    List<String> members = [room.owner, ...room.members];
-    for (String id in members) {
+    List<String?> members = [room.owner, ...room.members!];
+    for (String? id in members) {
       final user = FirebaseFirestore.instance.collection('people').doc(id);
       await user.collection('rooms').doc(room.id).set({
         'id': room.id,
@@ -173,12 +174,13 @@ class FirestoreDatabase implements Database {
     });
   }
 
-  Future<void> updateRoomPhoto(Room room, String photoUrl) async {
-    final roomRef = FirebaseFirestore.instance.collection('rooms').doc(room.id);
+  Future<void> updateRoomPhoto(Room? room, String? photoUrl) async {
+    final roomRef =
+        FirebaseFirestore.instance.collection('rooms').doc(room!.id);
     await roomRef.update({'photoUrl': photoUrl});
   }
 
-  Stream<DocumentSnapshot> roomStream(String id) =>
+  Stream<DocumentSnapshot> roomStream(String? id) =>
       _service.roomCollectionStream(
         roomID: id,
         builder: (data) => Room.fromMap(data),
@@ -189,7 +191,7 @@ class FirestoreDatabase implements Database {
         builder: (data) => Room.fromMap(data),
       );
 
-  Stream<List<Room>> roomsDetailsStream(List<String> roomIDs) =>
+  Stream<List<Room>> roomsDetailsStream(List<String?>? roomIDs) =>
       _service.roomsDetailsCollectionStream(
         roomIDs: roomIDs,
         builder: (data) => Room.fromMap(data),
@@ -206,7 +208,7 @@ class FirestoreDatabase implements Database {
         builder: (data) => People.fromMap(data),
       );
 
-  Stream<List<Message>> messagesStream(String roomID) =>
+  Stream<List<Message>> messagesStream(String? roomID) =>
       _service.messagesCollectionStream(
         roomID: roomID,
         builder: (data) => Message.fromMap(data),

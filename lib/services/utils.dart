@@ -23,20 +23,20 @@ class Utils {
     return format.format(date);
   }
 
-  String getRoomID(Auth auth, String peopleID) {
-    final List<String> ids = [auth.currentUser.uid, peopleID];
+  String getRoomID(Auth auth, String? peopleID) {
+    final List<String?> ids = [auth.currentUser!.uid, peopleID];
     ids.sort();
     return ids.join('');
   }
 
   Map<String, People> constructMemberMap(Auth auth, People people) {
     Map<String, People> map = {};
-    map[people.nickname] = people;
+    map[people.nickname!] = people;
 
     return map;
   }
 
   List<String> retrieveMembers(Auth auth, People people) {
-    return [auth.currentUser.uid, people.id];
+    return [auth.currentUser!.uid, people.id!];
   }
 }

@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 class CustomCircleAvatar extends StatelessWidget {
   CustomCircleAvatar(
-      {@required this.photoUrl,
-      @required this.width,
+      {required this.photoUrl,
+      required this.width,
       this.backgroundColor,
       this.onTap});
-  final String photoUrl;
+  final String? photoUrl;
   final double width;
-  final Color backgroundColor;
-  final VoidCallback onTap;
+  final Color? backgroundColor;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class CustomCircleAvatar extends StatelessWidget {
           child: CachedNetworkImage(
             width: width,
             fit: BoxFit.fill,
-            imageUrl: photoUrl,
+            imageUrl: photoUrl!,
             placeholder: (context, url) => CircularProgressIndicator(),
             errorWidget: (context, url, error) => Icon(Icons.error),
           ),

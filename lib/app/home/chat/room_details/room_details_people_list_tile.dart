@@ -5,21 +5,21 @@ import 'package:poghouse/services/auth.dart';
 import 'package:provider/provider.dart';
 
 class RoomDetailsPeopleListTile extends StatelessWidget {
-  const RoomDetailsPeopleListTile({Key key, @required this.people})
+  const RoomDetailsPeopleListTile({Key? key, required this.people})
       : super(key: key);
   final People people;
 
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<AuthBase>(context, listen: false);
-    bool isOwner = people.id == auth.currentUser.uid;
+    bool isOwner = people.id == auth.currentUser!.uid;
 
     return ListTile(
       leading: CustomCircleAvatar(
         photoUrl: people.photoUrl,
         width: 40,
       ),
-      title: Text(people.nickname),
+      title: Text(people.nickname!),
       trailing: isOwner
           ? Text("Owner",
               style: TextStyle(

@@ -1,17 +1,13 @@
 class People {
   People({this.id, this.nickname, this.photoUrl});
-  final String id;
-  final String nickname;
-  final String photoUrl;
+  final String? id;
+  final String? nickname;
+  final String? photoUrl;
 
   factory People.fromMap(Map<String, dynamic> data) {
-    if (data == null) {
-      return null;
-    }
-
-    final String id = data['id'];
-    final String nickname = data['nickname'];
-    final String photoUrl = data['photoUrl'];
+    final String? id = data['id'];
+    final String? nickname = data['nickname'];
+    final String? photoUrl = data['photoUrl'];
 
     return People(
       id: id,

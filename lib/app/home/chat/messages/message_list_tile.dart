@@ -7,7 +7,7 @@ import 'package:poghouse/services/utils.dart';
 
 class MessageListTile extends StatefulWidget {
   const MessageListTile({
-    Key key,
+    Key? key,
     this.message,
     this.isMe,
     this.isHideNickname,
@@ -15,12 +15,12 @@ class MessageListTile extends StatefulWidget {
     this.sender,
     this.utils,
   }) : super(key: key);
-  final Message message;
-  final bool isMe;
-  final bool isHideNickname;
-  final bool isHideAvatar;
-  final People sender;
-  final Utils utils;
+  final Message? message;
+  final bool? isMe;
+  final bool? isHideNickname;
+  final bool? isHideAvatar;
+  final People? sender;
+  final Utils? utils;
 
   @override
   _MessageListTileState createState() => _MessageListTileState();
@@ -28,7 +28,7 @@ class MessageListTile extends StatefulWidget {
 
 class _MessageListTileState extends State<MessageListTile> {
   bool _showTimeStamp = false;
-  Utils get utils => widget.utils;
+  Utils? get utils => widget.utils;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class _MessageListTileState extends State<MessageListTile> {
             child: Padding(
               padding: EdgeInsets.only(bottom: 8),
               child: Text(
-                utils.readTimestamp(widget.message.sentAt),
+                utils!.readTimestamp(widget.message!.sentAt!),
                 style: TextStyle(
                   color: Color(0xff675C7E),
                   fontSize: 12.0,
@@ -49,10 +49,10 @@ class _MessageListTileState extends State<MessageListTile> {
               ),
             ),
           ),
-          (widget.message.type != null && widget.message.type == 0)
-              ? Center(child: Text(widget.message.content))
+          (widget.message!.type != null && widget.message!.type == 0)
+              ? Center(child: Text(widget.message!.content!))
               : Row(
-                  mainAxisAlignment: (widget.isMe)
+                  mainAxisAlignment: widget.isMe!
                       ? MainAxisAlignment.end
                       : MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -61,9 +61,9 @@ class _MessageListTileState extends State<MessageListTile> {
                       padding: EdgeInsets.only(right: 10),
                       child: Column(
                         children: <Widget>[
-                          (!widget.isMe && !widget.isHideAvatar)
+                          (!widget.isMe! && !widget.isHideAvatar!)
                               ? CustomCircleAvatar(
-                                  photoUrl: widget.sender.photoUrl, width: 30)
+                                  photoUrl: widget.sender!.photoUrl, width: 30)
                               : SizedBox(width: 30),
                         ],
                       ),
@@ -72,11 +72,11 @@ class _MessageListTileState extends State<MessageListTile> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        (!widget.isMe && !widget.isHideNickname)
+                        (!widget.isMe! && !widget.isHideNickname!)
                             ? Padding(
                                 padding: EdgeInsets.only(left: 10, bottom: 5),
                                 child: Text(
-                                  widget.sender.nickname,
+                                  widget.sender!.nickname!,
                                   style: TextStyle(
                                     color: Color(0xff675C7E),
                                     fontSize: 12.0,
@@ -87,7 +87,7 @@ class _MessageListTileState extends State<MessageListTile> {
                         InkWell(
                           child: BubbleMessage(
                             painter: BubblePainter(
-                              isIncoming: !widget.isMe,
+                              isIncoming: !widget.isMe!,
                             ),
                             child: Container(
                               constraints: BoxConstraints(
@@ -97,7 +97,7 @@ class _MessageListTileState extends State<MessageListTile> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 15.0, vertical: 6.0),
                               child: Text(
-                                widget.message.content,
+                                widget.message!.content!,
                                 style: TextStyle(
                                   color: Color(0xff675C7E),
                                   fontSize: 15.0,

@@ -11,9 +11,9 @@ import 'package:provider/provider.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({
-    Key key,
-    @required this.manager,
-    @required this.isLoading,
+    Key? key,
+    required this.manager,
+    required this.isLoading,
   }) : super(key: key);
   final SignInManager manager;
   final bool isLoading;
@@ -51,7 +51,7 @@ class SignInPage extends StatelessWidget {
       final user = await manager.signInWithGoogle();
       final database = Provider.of<Database>(context, listen: false);
       final people = People(
-        id: user.uid,
+        id: user!.uid,
         nickname: user.displayName,
         photoUrl: user.photoURL,
       );
@@ -66,7 +66,7 @@ class SignInPage extends StatelessWidget {
       final user = await manager.signInWithFacebook();
       final database = Provider.of<Database>(context, listen: false);
       final people = People(
-        id: user.uid,
+        id: user!.uid,
         nickname: user.displayName,
         photoUrl: user.photoURL,
       );

@@ -21,15 +21,15 @@ import 'package:provider/provider.dart';
 
 class RoomDetailsPage extends StatefulWidget {
   RoomDetailsPage({this.room, this.members, this.database});
-  final Room room;
-  final Map<String, People> members;
-  final Database database;
+  final Room? room;
+  final Map<String?, People>? members;
+  final Database? database;
 
   static Future<void> show(
     BuildContext context, {
-    Room room,
-    Map<String, People> members,
-    Database database,
+    Room? room,
+    Map<String?, People>? members,
+    Database? database,
   }) async {
     await Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
@@ -47,14 +47,14 @@ class RoomDetailsPage extends StatefulWidget {
 }
 
 class _RoomDetailsPageState extends State<RoomDetailsPage> {
-  Room get room => widget.room;
-  Database get database => widget.database;
-  TextEditingController textController;
+  Room? get room => widget.room;
+  Database? get database => widget.database;
+  TextEditingController? textController;
   final focusNode = FocusNode();
 
   @override
   void initState() {
-    textController = new TextEditingController(text: room.name);
+    textController = new TextEditingController(text: room!.name);
     super.initState();
   }
 
@@ -77,7 +77,7 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
   }
 
   void _changeChatName(BuildContext context) async {
-    final initial = textController.text;
+    final initial = textController!.text;
     final auth = Provider.of<AuthBase>(context, listen: false);
 
     showPlatformDialog(
@@ -117,13 +117,13 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
             title: Text("Cancel"),
             onPressed: () {
               Navigator.pop(context);
-              textController.text = initial;
+              textController!.text = initial;
             },
           ),
           BasicDialogAction(
             title: Text("OK"),
             onPressed: () async {
-              final currentName = textController.text;
+              final currentName = textController!.text;
               if (currentName.length > 20) {
                 showAlertDialog(context,
                     title: 'The name is too long',
@@ -134,22 +134,22 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
 
               Navigator.pop(context);
               if (currentName != initial) {
-                await database.updateRoomName(room, currentName);
+                await database!.updateRoomName(room, currentName);
               }
               Navigator.pop(context);
 
               final currentMs = DateTime.now().millisecondsSinceEpoch;
               final message = Message(
-                roomID: room.id,
+                roomID: room!.id,
                 id: documentId,
                 content:
-                    '${auth.currentUser.displayName} has changed the group name',
-                sender: auth.currentUser.uid,
+                    '${auth.currentUser!.displayName} has changed the group name',
+                sender: auth.currentUser!.uid,
                 sentAt: currentMs,
                 type: 0,
               );
-              await database.setMessage(message);
-              await database.setRecentMessage(message);
+              await database!.setMessage(message);
+              await database!.setRecentMessage(message);
             },
           ),
         ],
@@ -161,8 +161,8 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
     final auth = Provider.of<AuthBase>(context, listen: false);
     Navigator.pop(context);
     ImagePicker picker = ImagePicker();
-    PickedFile pickedFile;
-    pickedFile = await picker.getImage(
+    XFile? pickedFile;
+    pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
       imageQuality: 50,
     );
@@ -170,34 +170,33 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
     if (pickedFile != null) {
       EasyLoading.show(status: 'uploading...');
       final photoUrl = await uploadFile(File(pickedFile.path));
-      await database.updateRoomPhoto(room, photoUrl);
+      await database!.updateRoomPhoto(room, photoUrl);
       EasyLoading.dismiss();
 
       final currentMs = DateTime.now().millisecondsSinceEpoch;
       final message = Message(
-        roomID: room.id,
+        roomID: room!.id,
         id: documentId,
-        content: '${auth.currentUser.displayName} has changed the group photo',
-        sender: auth.currentUser.uid,
+        content: '${auth.currentUser!.displayName} has changed the group photo',
+        sender: auth.currentUser!.uid,
         sentAt: currentMs,
         type: 0,
       );
-      await database.setMessage(message);
-      await database.setRecentMessage(message);
+      await database!.setMessage(message);
+      await database!.setRecentMessage(message);
     }
   }
 
-  Future<String> uploadFile(File _image) async {
-    StorageReference storageReference = FirebaseStorage.instance
+  Future<String?> uploadFile(File _image) async {
+    Reference storageReference = FirebaseStorage.instance
         .ref()
         .child('rooms/${_image.path.split('/').last}');
-    StorageUploadTask uploadTask = storageReference.putFile(_image);
-    await uploadTask.onComplete;
+    UploadTask uploadTask = storageReference.putFile(_image);
 
-    String returnURL;
-    await storageReference.getDownloadURL().then((fileURL) {
-      returnURL = fileURL;
-    });
+    // await uploadTask.onComplete;
+
+    String? returnURL;
+    await storageReference.getDownloadURL();
     return returnURL;
   }
 
@@ -206,7 +205,7 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
       child: Column(
         children: [
           _buildRoomInfo(),
-          _buildPeopleList(room),
+          _buildPeopleList(room!),
         ],
       ),
     );
@@ -214,16 +213,16 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
 
   Widget _buildRoomInfo() {
     return StreamBuilder(
-      stream: database.roomStream(room.id),
+      stream: database!.roomStream(room!.id),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           showExceptionAlertDialog(
             context,
             title: "Error",
-            exception: snapshot.error,
+            exception: snapshot.error as Exception?,
           );
         } else if (snapshot.connectionState == ConnectionState.active) {
-          final Room room = Room.fromMap(snapshot.data.data());
+          final Room room = Room.fromMap(snapshot.data as Map<String, dynamic>);
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -231,7 +230,7 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
               CustomCircleAvatar(photoUrl: room.photoUrl, width: 80),
               SizedBox(height: 10),
               Text(
-                room.name,
+                room.name!,
                 style: TextStyle(
                   color: Color(0xff675C7E),
                   fontSize: 18.0,
@@ -247,11 +246,11 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
   }
 
   Widget _buildPeopleList(Room room) {
-    List<People> people = [];
-    List<String> uidList = [room.owner, ...room.members];
+    List<People?> people = [];
+    List<String?> uidList = [room.owner, ...room.members!];
 
-    for (String uid in uidList) {
-      people.add(widget.members[uid]);
+    for (String? uid in uidList) {
+      people.add(widget.members![uid]);
     }
 
     return Expanded(
@@ -270,7 +269,7 @@ class _RoomDetailsPageState extends State<RoomDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          FlatButton(
+          TextButton(
             child: Text(
               'Edit',
               style: TextStyle(fontSize: 18, color: Colors.white),

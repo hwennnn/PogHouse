@@ -6,9 +6,9 @@ typedef ItemWidgetBuilder<T> = Widget Function(BuildContext context, T item);
 
 class ChatListItemBuilder extends StatelessWidget {
   const ChatListItemBuilder({
-    Key key,
-    @required this.rooms,
-    @required this.itemBuilder,
+    Key? key,
+    required this.rooms,
+    required this.itemBuilder,
   }) : super(key: key);
   final List<Room> rooms;
   final ItemWidgetBuilder itemBuilder;

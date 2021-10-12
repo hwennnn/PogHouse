@@ -10,7 +10,7 @@ import 'package:poghouse/services/database.dart';
 import 'package:provider/provider.dart';
 
 class ChatHome extends StatefulWidget {
-  const ChatHome({Key key, @required this.auth}) : super(key: key);
+  const ChatHome({required this.auth});
   final Auth auth;
 
   @override
@@ -29,18 +29,18 @@ class _ChatHomeState extends State<ChatHome> {
   Widget favoriteContacts() {
     final database = Provider.of<Database>(context, listen: false);
     return StreamBuilder(
-      stream: database.favoriteStream(auth.currentUser.uid),
+      stream: database.favoriteStream(auth.currentUser!.uid),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           showExceptionAlertDialog(
             context,
             title: "Error",
-            exception: snapshot.error,
+            exception: snapshot.error as Exception,
           );
         } else if (snapshot.connectionState == ConnectionState.active) {
-          List<People> favorites = snapshot.data;
+          List<People> favorites = snapshot.data as List<People>;
           favorites.sort((a, b) =>
-              a.nickname.toLowerCase().compareTo(b.nickname.toLowerCase()));
+              a.nickname!.toLowerCase().compareTo(b.nickname!.toLowerCase()));
           // print("Chat: $favorites");
           return FavoriteContacts(
             favorites: favorites,
@@ -53,7 +53,7 @@ class _ChatHomeState extends State<ChatHome> {
 
   Widget recentChats() {
     final database = Provider.of<Database>(context, listen: false);
-    final uid = auth.currentUser.uid;
+    final uid = auth.currentUser!.uid;
     return StreamBuilder(
       stream: database.roomsStream(uid),
       builder: (context, snapshot) {
@@ -64,9 +64,10 @@ class _ChatHomeState extends State<ChatHome> {
             exception: snapshot.error,
           );
         } else if (snapshot.connectionState == ConnectionState.active) {
-          List<Room> rooms = snapshot.data;
-          List<String> roomIDs =
-              (rooms.length != 0) ? rooms.map((e) => e.id).toList() : ['dummy'];
+          List<Room> rooms = snapshot.data as List<Room>;
+          List<String> roomIDs = (rooms.length != 0)
+              ? rooms.map((e) => e.id!).toList()
+              : ['dummy'];
           return Expanded(
             child: RecentChats(
               roomIDs: roomIDs,
@@ -86,7 +87,7 @@ class _ChatHomeState extends State<ChatHome> {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: Theme.of(context).accentColor,
+                color: Theme.of(context).colorScheme.secondary,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30.0),
                   topRight: Radius.circular(30.0),

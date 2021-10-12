@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 class FavoriteContacts extends StatelessWidget {
   FavoriteContacts({this.favorites});
-  final List<People> favorites;
+  final List<People>? favorites;
 
   void _showMessageScreen(
     BuildContext context,
@@ -53,7 +53,7 @@ class FavoriteContacts extends StatelessWidget {
     List<People> members = await database.retrieveRoomMembers(room);
     Map<String, People> map = new Map();
     for (People people in members) {
-      map[people.id] = people;
+      map[people.id!] = people;
     }
     return map;
   }
@@ -98,9 +98,9 @@ class FavoriteContacts extends StatelessWidget {
             child: ListView.builder(
               padding: EdgeInsets.only(left: 10.0),
               scrollDirection: Axis.horizontal,
-              itemCount: favorites.length,
+              itemCount: favorites!.length,
               itemBuilder: (BuildContext context, int index) {
-                final people = favorites[index];
+                final people = favorites![index];
                 return Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Column(
@@ -109,11 +109,11 @@ class FavoriteContacts extends StatelessWidget {
                         photoUrl: people.photoUrl,
                         width: 50,
                         onTap: () => _showMessageScreen(
-                            context, database, auth, utils, people),
+                            context, database, auth as Auth, utils, people),
                       ),
                       SizedBox(height: 6.0),
                       Text(
-                        people.nickname,
+                        people.nickname!,
                         style: TextStyle(
                           color: Colors.black54,
                           fontSize: 13.0,

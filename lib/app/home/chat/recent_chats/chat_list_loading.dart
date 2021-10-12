@@ -13,8 +13,8 @@ class ChatListLoading extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: Shimmer.fromColors(
-              baseColor: Colors.grey[300],
-              highlightColor: Colors.grey[100],
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: Row(

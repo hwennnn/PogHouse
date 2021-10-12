@@ -13,15 +13,15 @@ class LandingPage extends StatelessWidget {
 
     return Provider<Database>(
       create: (_) => FirestoreDatabase(),
-      child: StreamBuilder<User>(
+      child: StreamBuilder<User?>(
         stream: auth.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
-            final User user = snapshot.data;
+            final User? user = snapshot.data;
             if (user == null) {
               return SignInPage.create(context);
             }
-            return HomePage(auth: auth);
+            return HomePage(auth: auth as Auth);
           }
           return Scaffold(
             body: Center(
